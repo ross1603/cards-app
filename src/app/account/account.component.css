@@ -1,0 +1,342 @@
+.actions-container {
+    display: grid;
+    grid: 'ac-right' 'ac-left';
+    justify-content: center;
+}
+
+.ac-left {
+    grid-area: ac-left;
+}
+
+.ac-right {
+    grid-area: ac-right;
+    align-self: center;
+    font-size: 4vh;
+    font-weight: bold;
+    color: grey;
+}
+
+.ac-right span {
+    font-size: 4vh;
+    color: grey;
+}
+
+.add-card-container {
+    display: grid;
+    grid: 'input input'
+        'input input'
+        'select radio'
+        'submit submit';
+    width: 325px;
+}
+
+.add-card-inputs {
+    grid-area: input;
+    justify-self: center;
+}
+
+.add-card-select {
+    grid-area: select;
+    justify-self: start;
+}
+
+.add-card-radio {
+    grid-area: radio;
+    justify-self: start;
+    margin-top: 1vh;
+}
+
+.add-card-button {
+    grid-area: submit;
+    justify-self: center;
+}
+
+
+.form_addcard {
+    margin-top: 2vh;
+}
+
+.form_addcard input {
+    margin-top: 1vh;
+    padding: 15px;
+    width: 325px;
+    border-radius: 5px;
+    border: 1px solid black;
+}
+
+.form_addcard select {
+    padding: 15px;
+    width: 225px;
+    border-radius: 5px;
+    margin-top: 1vh;
+}
+
+.form_addcard button {
+    margin-top: 1vh;
+    padding: 15px;
+    width: 325px;
+    display: block;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    font-weight: bold;
+    background-color: #318811;
+}
+
+.input-radio {
+    width: 20px !important;
+    display: inline-block;
+}
+
+.add-card-radio label,
+.add-card-radio span {
+    font-size: 1.2vh;
+}
+
+.account {
+    display: grid;
+    margin-top: 3vh;
+    grid: 'cards' 'collections' 'migrations';
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+.account-top-menu {
+    margin-top: 3vh;
+    display: grid;
+    grid: 'left-menu' 'right-menu';
+    justify-content: center;
+    text-align: center;
+}
+
+.delete-button {
+    width: 5vw;
+    background-color: rgb(255, 16, 56);
+    color: white;
+    font-weight: bold;
+    font-size: 1.5vh;
+    padding: 10px;
+    text-decoration: none;
+}
+
+.menu-left {
+    grid-area: left-menu;
+}
+
+.menu-right {
+    grid-area: right-menu;
+}
+
+.switchSide {
+    background-color: #eee;
+    font-size: 1vh;
+    margin-left: 1vw;
+    border: none;
+    float: right;
+    padding: 5px;
+}
+
+.menu-right a,
+.menu-left a {
+    grid-area: right-menu;
+    display: block;
+    background-color: blue;
+    color: white;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid white;
+    text-decoration: none;
+    max-width: 200px;
+    margin-top: 0.5vh;
+}
+
+.menu-left a {
+    background-color: white;
+    color: black;
+    border: 1px solid grey;
+}
+
+.item-wrapper {
+    display: grid;
+    grid: 'name actions' / 80% 20%;
+    border-bottom: 1px solid #cecece;
+    background-color: #fdfdfd;
+    height: 5vh;
+    padding: 5px;
+}
+
+.item-wrapper a,
+span {
+    text-decoration: none;
+    color: black;
+    font-size: 1.5vh;
+}
+
+.item-wrapper:hover {
+    background-color: #fff2f4;
+    cursor: pointer;
+}
+
+.account-dropbutton {
+    background-color: inherit;
+    border: none;
+}
+
+.account-dropdown-content {
+    display: none;
+    position: absolute;
+    z-index: 99999;
+    background-color: #f1f1f1;
+    min-width: 100px;
+    box-shadow: 5px 9px 15px 1px rgba(0, 0, 0, 0.1);
+}
+
+.account-dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.account-dropdown-content a:hover {
+    background-color: #cfffc7;
+}
+
+.account-dropdown:hover .account-dropdown-content {
+    display: block;
+}
+
+.account-dropdown:hover .account-dropbutton {
+    background-color: #fff2f4;
+}
+
+.all {
+    height: 30vh;
+    overflow-y: auto;
+    scrollbar-width: none;
+    text-align: left;
+}
+
+.account-all-cards {
+    grid-area: cards;
+}
+
+.account-all-title {
+    padding: 5px;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+.account-all-collections {
+    grid-area: collections;
+}
+
+.account-all-migrations {
+    grid-area: migrations;
+}
+
+.item-name {
+    grid-area: name;
+    align-self: center;
+}
+
+.item-actions {
+    grid-area: actions;
+    justify-self: end;
+    align-self: center;
+}
+
+/* Migrations */
+
+.migration-step-2 {
+    padding: 15px;
+    width: 100%;
+    background-color: pink;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+.migration-button {
+    background-color: blue;
+    color: white;
+    font-weight: bold;
+    padding: 15px;
+    border-radius: 1px;
+    cursor: pointer;
+    border: none;
+}
+
+.migration-results {
+    margin-top: 3vh;
+    border: 1px solid black;
+    width: 100%;
+    border-radius: 5px;
+}
+
+.migration-results-title {
+    display: grid;
+    grid: 'item1 item2 item3' / 2fr 3fr 1fr;
+    align-items: center;
+}
+
+.migration-wrapper {
+    display: grid;
+    grid: 'item1 item2 item3' / 8fr 3fr 1fr;
+    padding: 10px;
+    background-color: #cec;
+    border-bottom: 1px solid grey;
+
+}
+
+.extra {
+    text-align: center;
+}
+
+.m-item-1 {
+    grid-area: item1;
+}
+
+
+.m-item-2 {
+    grid-area: item2;
+}
+
+.m-item-3 {
+    grid-area: item3;
+    align-self: top;
+}
+
+@media (min-width:1024px) {
+    .account-top-menu {
+        margin-top: 3vh;
+        grid: 'left-menu right-menu' / 1fr 3fr;
+        justify-content: space-around;
+        text-align: center;
+    }
+
+    .menu-right {
+        justify-self: end;
+    }
+
+    .menu-right a {
+        display: inline-block;
+        width: 20vw;
+    }
+
+    .actions-container {
+        grid: 'ac-left ac-right';
+        justify-content: stretch;
+    }
+
+    /*  */
+
+        .migration-step-2 {
+        width: 85%;
+    }
+
+    .migration-results-title {
+        grid: 'item1 item2 item3' / 8fr 3fr 1fr;
+    }
+}

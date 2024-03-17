@@ -1,0 +1,31 @@
+<div class="signup-container">
+  <div class="signup">
+    <div style="grid-area: left">
+      <a href="/"><img src="./assets/logo.png" class="logo"></a>
+    </div>
+    <div style="grid-area: right; justify-self: end; align-self: center; font-size: 3vh; font-weight: bold;">REGISTER
+    </div>
+
+    <form #form_register="ngForm" (ngSubmit)="onSubmit()" class="form_signup">
+
+      <div>
+        <label for="username"></label>
+        <input type="text" id="username" name="username" ngModel required minlength="3" placeholder="Enter username.">
+      </div>
+      <div>
+        <label for="password"></label>
+        <input type="password" id="password" name="password" ngModel required minlength="3"
+          placeholder="Enter password.">
+        <br><br>
+        <span class="signup_text">Already have an account? <a routerLink="/login">Login</a> now.</span>
+      </div>
+      <div>
+        <button type="submit" id="submit" [disabled]="!form_register.valid">Submit</button>
+      </div>
+    </form>
+
+    <div class="signup-text" *ngIf="displayResponse" [style.background-color]="buttonColor">
+      {{ displayResponse }}
+    </div>
+  </div>
+</div>

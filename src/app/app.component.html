@@ -1,0 +1,101 @@
+<main class="grid-container" *ngIf="!isSignup">
+    <header class="header col">
+        <div class="header-content">
+            <div class="logo">
+                <a routerLink="/"><img src="./assets/logo.png" class="logo"></a>
+            </div>
+
+            <div id="dropdownmenu" class="dropdownmenu" onClick='menuOpen(this)'>
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
+            </div>
+
+            <nav id="desktop-navigation">
+                <a routerLink="/" class="navLink">HOME</a>
+                <a routerLink="/collections" class="navLink">COLLECTIONS</a>
+                <a routerLink="/account" class="navLink">ACCOUNT</a>
+                <a *ngIf="!isLogged" href="/login" class="navLink"> LOGIN</a> <a *ngIf="!isLogged" href="/register"
+                    style="border: 1px solid black; border-radius: 15px; padding: 1vh; background-color: lightcoral; font-weight: bold;">GET
+                    STARTED</a>
+                <a *ngIf="isLogged" href="/logout" class="navLink">LOGOUT</a>
+            </nav>
+        </div>
+    </header>
+    <nav id="dropdown">
+        <a routerLink="/">HOME</a>
+        <a routerLink="/collections">COLLECTIONS</a>
+        <a routerLink="/account">ACCOUNT</a>
+        <a *ngIf="!isLogged" href="/login"> LOGIN</a> <a *ngIf="!isLogged" href="/register"> REGISTER</a>
+        <a *ngIf="isLogged" href="/logout"> LOGOUT</a>
+    </nav>
+    <section class="main col" *ngIf="isLoaded">
+        <div class="content">
+            <router-outlet></router-outlet>
+        </div>
+    </section>
+
+    <section class="main col" *ngIf="!isLoaded">
+        <div class="content">
+            <div class="loader">
+                <img src="./assets/loader.gif">
+            </div>
+        </div>
+    </section>
+
+    <section class="footer col" *ngIf="isLoaded">
+        <div class="content">
+            <div class="footer-container">
+                <div class="footer-1">
+                    <h3>Discover:</h3>
+                    <a routerLink="/account">Create new card</a><br>
+                    <a routerLink="/collections">Browse collections</a>
+                </div>
+                <div class="footer-2">
+                    <h3>Product:</h3>
+                    <a routerLink="#">About us</a><br>
+                    <a routerLink="#">FAQ</a><br>
+                    <a routerLink="#">Contact us</a>
+                </div>
+                <div class="footer-3">
+                    <h3>Cards to remember.</h3>
+                    <a routerLink="/"><img src="./assets/logo.png" class="logo"
+                            style="filter: grayscale(100%);"></a><br>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<main class="grid-container" *ngIf="isSignup">
+    <router-outlet></router-outlet>
+</main>
+
+<div class="error-modal" *ngIf="services.modalActive" [style.background-color]="services.modalPositive">
+    <div> {{ this.services.msgToModal }}</div>
+</div>
+
+<div class="analytics-sidebar" *ngIf="!isSignup && !isAccount && isLogged">
+    <div class="analytics-wrapper">
+        <img src="./assets/analytics-icon.png"><br>
+        <span class="analytics-title">ANALYTICS</span><br><br>
+        <span class="analytics-title" style="font-size: 10px;">TODAY'S RESULTS</span>
+
+        <div style="margin-top: 35px; background-color: rgb(208, 208, 255); border-radius: 5px; padding: 5px;">
+            <span class="analytics-count">{{ services.analyticsTotal }}</span><br>
+            <span class="analytics-title">CARDS VIEWED</span>&nbsp;
+            <span class="analytics-tooltip">&nbsp;?&nbsp; <span class="tooltip-text">The number of cards where the
+                    answer was shown and were rated with yes or no.</span></span>
+
+        </div>
+        <div style="margin-top: 15px;  background-color: rgb(208, 255, 229); border-radius: 5px; padding: 5px;">
+            <span class="analytics-count">{{ services.analyticsYes }}</span><br>
+            <span class="analytics-title">CORRECT</span>
+        </div>
+        <div style="margin-top: 15px;  background-color: rgb(255, 208, 208); border-radius: 5px; padding: 5px;">
+            <span class="analytics-count">{{ services.analyticsNo }}</span><br>
+            <span class="analytics-title">MISSED</span>
+        </div>
+    </div>
+    <div class="analytics-bottom"><a routerLink="/account">FULL ANALYTICS ►</a></div>
+</div>

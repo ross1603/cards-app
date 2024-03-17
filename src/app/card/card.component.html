@@ -1,0 +1,72 @@
+<div class="cards-title" *ngFor="let item of fetchedData">
+    <a routerLink="/collections" class="bc-link">COLLECTIONS</a> ► <a routerLink="/collections/{{item.collection_id}}"
+        class="bc-link">{{ item.name }}</a> ► {{ item.front }}
+</div>
+<div *ngFor="let item of fetchedData" class="cards-container" id="card">
+    <div class="card-self">
+        <div class="card-display-container">
+            <div class="card-display">
+                <div class="shape-wrapper" [style.background-color]="services.bgColor(item.front.length)">
+                    <div class="remember {{ services.shapeSelect(item.front.length) }}"></div>
+                </div>
+                {{ isTrue ? item.back : item.front }}
+                <div class="vote-text" *ngIf="isTrue && services.loggedIn()">DID YOU ANSWER CORRECTLY?</div>
+                <div class="vote" *ngIf="isTrue && services.loggedIn()">
+                    <button class="vote-button yes"  (click)="services.vote('yes', item.id)" [disabled]="services.voted">▲</button>
+                    <button class="vote-button no"  (click)="services.vote('no', item.id)" [disabled]="services.voted">▼</button>
+                </div>
+
+            </div>
+            <div class="card-actions">
+                <button type="submit" (click)="showBack(item.collection_id)" class="showAnswerButton"
+                    [style.background-color]="buttonColor">{{
+                    cardActions }}</button><button type="submit" class="shareButton"
+                    (click)="services.share('card/' + item.id)">{{ services.shareButton }}</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="cards-list">
+
+        <div class="cards-list-buttons" *ngIf="fetchedData">
+            <div class="latest-cards">CARD DETAILS</div>
+            <div class="buttons-list" style="height: auto;">
+                <button *ngFor="let item of fetchedData, index as i">
+                    DATE CREATED: {{ item.date | date : "fullDate" }}<br>
+                </button>
+                <button>
+                    ADDED BY: {{ item.username }}
+                </button>
+            </div>
+            <div class="cards-collection">
+                <div>
+                    check all cards<br>
+                    from this collection
+                </div>
+                <div class="collections-link">
+                    <a routerLink="/collections/{{ item.collection_id }}"
+                        style="text-decoration: none; color: white; font-weight: bold;"> {{ item.name }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="collections-title" style="margin-top: 5vh;">
+    RECOMMENDED COLLECTIONS:
+</div>
+
+<div class="collections-container" *ngIf="recommendedData" style="margin-top: 2vh;">
+    <div class="collections-item" *ngFor="let item_recommended of recommendedData"
+        [routerLink]="['/collections/', item_recommended.id]">
+        <div class="ci-1">OPEN COLLECTION ►
+
+        </div>
+        <div class="ci-2">
+            <a routerLink="/collections/{{ item_recommended.id }}"> {{ item_recommended.name }} </a><br>
+            <br><span class="ci-count">{{item_recommended.count }} {{ item_recommended.count === 1 ? 'card' : 'cards'
+                }}</span>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,95 @@
+<div class="account-top-menu">
+    <div class="menu-left">
+        <a routerLink="#">ACCOUNT MANAGEMENT</a>
+    </div>
+    <div class="menu-right">
+        <a routerLink="/account">BACK TO ACCOUNT</a>
+    </div>
+</div>
+
+<div class="actions-container" style="margin-top: 3vh;">
+
+    <div class="ac-left">
+
+        <!-- Step 1 from migration -->
+
+        <form #form_migration="ngForm" class="form_addcard" (ngSubmit)="onSubmit('fetch')" *ngIf="!fetchedData">
+            <label for="account"></label>
+            <input type="text" id="account" name="account" placeholder="Enter account ID here..." required minlength="3"
+                ngModel>
+            <div></div>
+            <label for="api_key"></label>
+            <input type="password" id="api_key" name="api_key" placeholder="Enter API key here..." required
+                minlength="3" ngModel>
+            <div></div>
+            <button type="submit" id="submit">Migrate</button>
+        </form>
+
+        <!-- Step 2 from migration -->
+
+
+        <div *ngIf="fetchedData" class="migration-step-2">
+            Total of <b>{{ this.total }}</b> cards will be created. Please adjust the migration <br>settings
+            below:<br><br>
+
+            <form #form_insert="ngForm" (ngSubmit)="migrationSubmit(fetchedData)">
+                <label for="ispublic"><b>Adjust public status:</b></label><br>
+                <input type="radio" name="is_public" value="1" required ngModel>Make all public.<br>
+                <input type="radio" name="is_public" value="0" required ngModel>Make all private.<br>
+                <input type="radio" name="is_public" value="2" required ngModel>Keep as they are. <br>
+                <br>
+                <label for="collection_settings"><b>Collection preferences:</b></label><br>
+                <input type="radio" name="collection_settings" value="0" required ngModel>Add all to a new migration
+                collection.
+                <br>
+                <input type="radio" name="collection_settings" value="1" required ngModel>Keep as they are. <br>
+
+                <br><button type="submit" id="submit_migration" class="migration-button"
+                    [disabled]="!form_insert.valid">Confirm and submit</button>
+            </form>
+        </div>
+
+    </div>
+
+    <div class="ac-right">
+        <span>MIGRATION</span>
+
+    </div>
+
+</div>
+
+<!-- Migration results -->
+<div *ngIf="fetchedData" class="migration-results">
+
+    <div class="migration-results-title" style="border-bottom: 1px solid black; text-align: center;">
+        <div class="m-item-1">
+            CARD
+        </div>
+        <div class="m-item-2" style="border-right: 1px solid black; border-left: 1px solid black;" class="item-text">
+            COLLECTION NAME
+        </div>
+        <div class="m-item-3">
+            PUBLIC
+        </div>
+    </div>
+
+    <div style="overflow-y: auto; scrollbar-width: none; height: 20vh;">
+
+        <div class="migration-wrapper" *ngFor="let item of fetchedData">
+
+            <div class="m-item-1">
+                {{ item.front }}<br>
+                {{ item.back }}
+            </div>
+            <div class="m-item-2" class="extra">
+                {{ item.name }}
+            </div>
+            <div class="m-item-3" class="extra">
+                {{ item.is_public }}
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div style="height: 40vh;" *ngIf="!fetchedData"></div>

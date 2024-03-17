@@ -1,0 +1,141 @@
+<div class="welcome">
+  <div class="welcome-left">
+    <h2>Cards<br>to remember.</h2>
+    <br>
+    <a href="#card" class="welcome-button">TRY NOW, register later.</a><br>
+
+    <h5>Have questions? Check our <a href="#faq">FAQ.</a></h5>
+
+    <form #form_search="ngForm" (ngSubmit)="onSubmit()" class="form_search">
+
+      <div>
+        <label for="search"></label>
+        <input type="search" id="search" name="search" ngModel required minlength="3"
+          placeholder="Search a card or collection." style="border: 1px solid grey !important;">
+        <button type="submit" id="submit" [disabled]="!form_search.valid">Search</button>
+      </div>
+    </form>
+
+  </div>
+  <div class="welcome-right">
+    <img src="./assets/cardPreview.png" class="welcome-img">
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stats-left">
+    <div class="stats-box">
+      <br>
+      <span class="stats-text-type">CARDS</span>
+      <br><br>
+      <span class="stats-text-count">33+</span>
+      <span class="stats-text-descr">Huge variety of cards available ready to be learned!</span>
+    </div>
+  </div>
+  <div class="stats-middle">
+    <div class="stats-box">
+      <br>
+      <span class="stats-text-type">COLLECTIONS</span>
+      <br><br>
+      <span class="stats-text-count">15+</span>
+      <span class="stats-text-descr">Numerous collections in variety of topics to choose from.</span>
+    </div>
+  </div>
+  <div class="stats-right">
+    <div class="stats-box">
+      <br>
+      <span class="stats-text-type">USERS</span>
+      <br><br>
+      <span class="stats-text-count">10+</span>
+      <span class="stats-text-descr">Ever increasing users base that continuosly contribute to the success of the
+        project.</span>
+      <br><br>
+    </div>
+  </div>
+</div>
+
+
+<div class="collections-title" style="margin-top: 5vh;">
+  RECOMMENDED COLLECTIONS
+</div>
+
+<div class="collections-container" *ngIf="recommendedData" style="margin-top: 2vh;">
+  <div class="collections-item" *ngFor="let item_recommended of recommendedData"
+    [routerLink]="['/collections/', item_recommended.id]">
+    <div class="ci-1">OPEN COLLECTION ►
+
+    </div>
+    <div class="ci-2">
+      <a routerLink="/collections/{{ item_recommended.id }}"> {{ item_recommended.name }} </a><br>
+      <br><span class="ci-count">{{item_recommended.count }} {{ item_recommended.count === 1 ? 'card' : 'cards'
+        }}</span>
+    </div>
+  </div>
+</div>
+
+
+<div class="cards-container" id="card">
+  <div class="card-self">
+    <div class="card-display-container">
+      <div class="card-display">
+        <div class="shape-wrapper" [style.background-color]="services.bgColor(currentCard.length)">
+          <div class="remember {{ services.shapeSelect(currentCard.length) }}"></div>
+        </div>
+        {{ currentCard }}
+        <div class="vote-text" *ngIf="voteDiv && services.loggedIn()">DID YOU ANSWER CORRECTLY?</div>
+        <div class="vote" *ngIf="voteDiv && services.loggedIn()">
+          <button class="vote-button yes" (click)="services.vote('yes', currentCardId)"
+            [disabled]="services.voted">▲</button>
+          <button class="vote-button no" (click)="services.vote('no', currentCardId)"
+            [disabled]="services.voted">▼</button>
+        </div>
+
+      </div>
+      <div class="card-actions">
+        <button type="submit" (click)="showAnswer()" class="showAnswerButton" [style.background-color]="buttonColor">{{
+          cardActions }}</button><button type="submit" class="shareButton"
+          (click)="services.share('card/' + currentCardId)">{{ services.shareButton }}</button>
+      </div>
+    </div>
+  </div>
+  <div class="cards-list">
+
+    <div class="cards-list-buttons" *ngIf="fetchedData">
+      <div class="latest-cards">LATEST CARDS</div>
+      <div class="buttons-list">
+        <button *ngFor="let item of fetchedData, index as i" (click)="changeCard(item.front, item.back, i, item.id)">
+          <span style="font-size: 20px; color: green;" *ngIf="i == nextCard-1">●</span>
+          {{ item.front }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="FAQ" id="faq">
+  <h1>Frequently Asked Questions:</h1>
+  <h3>How do I create an account?</h3>
+  <p>Creating an account is extremely easy! Simply click on the "GET STARTED" button and fill out the registration form.
+  </p>
+
+  <h3>Why should I create an account? </h3>
+  <p>Registering an account allows you to create collections and cards that will be stored safely and be available to be
+    used anywhere, anytime!</p>
+
+  <h3>Is it free to use?</h3>
+  <p>Absolutely! All you need to do to start creating your cards and collections is registering a free account.</p>
+
+  <h3>What devices can I use it on?</h3>
+  <p>Currently we support Mobile & Desktop versions.</p>
+
+  <h3>How do I share my cards with others?</h3>
+  <p>Simply click the SHARE button available on any card. Please make sure that the card's status is set to public.</p>
+
+  <h3>Can I edit my existing cards and collections?</h3>
+  <p>Yes, you can. This action is available once you log in to your account, so no need to worry if you need to make any
+    adjustments once the cards and collections are already created.</p>
+
+  <h3>Can I delete my account?</h3>
+  <p>Yes, you can delete your whole account which will permanently delete all your existing cards and collections.</p>
+</div>
