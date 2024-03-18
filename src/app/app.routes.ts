@@ -7,6 +7,7 @@ import { LogoutComponent } from './logout/logout.component';
 import { RegisterComponent } from './register/register.component';
 import { CardComponent } from './card/card.component';
 import { CollectionsComponent } from './collections/collections.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 import { AuthGuard } from './auth-guard';
 
 export const routes: Routes = [
@@ -19,4 +20,5 @@ export const routes: Routes = [
   { path: 'collections', component: CollectionsComponent, title: "Collections" },
   { path: 'collections/:id', component: CollectionsComponent, data: { collectionId: ':id' }, title: "Collections" },
   { path: 'card/:id', component: CardComponent, title: "Card" },
+  { path: '**', component: NotFoundComponent, title: "404" }
 ];

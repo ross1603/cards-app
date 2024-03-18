@@ -26,9 +26,11 @@ export class AccountComponent {
     this.migrationItem = 0;
   }
 
+
   ngOnDestroy() {
     this.services.isAccount = false;
   }
+
   @ViewChild('form_add_card', { static: false }) form_add_card?: NgForm;
   @ViewChild('form_add_collection', { static: false }) form_add_collection?: NgForm;
   @ViewChild('form_analytics_dashboard', { static: false }) form_analytics_dashboard?: NgForm;

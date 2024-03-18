@@ -17,7 +17,6 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 export class AppComponent {
   constructor(public services: ServicesService, private http: HttpClient, private router: Router) {
-    this.services.isSignup = false;
     this.services.isAccount = false;
     this.services.isLogged = this.services.loggedIn();
   }
