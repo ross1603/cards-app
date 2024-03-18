@@ -1,10 +1,10 @@
 <div class="account-top-menu">
   <div class="menu-left">
-    <a routerLink="#">ACCOUNT MANAGEMENT</a>
+    <a href="/account#">ACCOUNT MANAGEMENT</a>
   </div>
   <div class="menu-right">
-    <a routerLink="#" (click)="toggleVisibility('addcard')">ADD CARD</a>
-    <a routerLink="#" (click)="toggleVisibility('addcollection')">ADD COLLECTION</a>
+    <a (click)="toggleVisibility('addcard')">ADD CARD</a>
+    <a (click)="toggleVisibility('addcollection')">ADD COLLECTION</a>
     <a routerLink="/migration">MIGRATE</a>
   </div>
 </div>
@@ -73,7 +73,7 @@
 
 </div>
 
-<section class="analytics-dashboard">
+<section class="analytics-dashboard-selector">
 
   <br>
   <form #form_analytics_dashboard="ngForm" class="form_analytics_dashboard" (ngSubmit)="analyticsDashboard(0)">
@@ -86,6 +86,63 @@
   </form>
 
 </section>
+
+<div class="analytics-dashboard-container">
+
+  <div class="ad-left">
+    <div class="graph-container">
+      <div class="gc-t1">
+        {{ successHeight == "5%" ? '0%' : successHeight }}
+      </div>
+      <div class="gc-t2">
+        {{ missedHeight == "5%" ? '0%' : missedHeight }}
+      </div>
+      <div class="gc-t3">
+        {{ mixedHeight == "5%" ? '0%' : mixedHeight }}
+      </div>
+      <div class="gc-t4">
+        {{ noneHeight == "5%" ? '0%' : noneHeight }}
+      </div>
+
+      <div class="gc-c1" [style.height]="successHeight">
+        <span class="tooltip-text-account">The amount of cards that have 100% success rate.</span>
+      </div>
+      <div class="gc-c2" [style.height]="missedHeight">
+        <span class="tooltip-text-account">The amount of cards that have 0% success rate.</span>
+      </div>
+      <div class="gc-c3" [style.height]="mixedHeight">
+        <span class="tooltip-text-account">The amount of cards that have success rate between 1-99%</span>
+      </div>
+      <div class="gc-c4" [style.height]="noneHeight">
+        <span class="tooltip-text-account">The amount of cards with no records of score.</span>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="ad-right">
+    <div class="item-wrapper"
+      style="padding: 13px; background-color: #ededff; border-bottom: 1px solid black; border-top-left-radius: 5px; border-top-right-radius: 5px;">
+      {{ selectedCategory }}
+    </div>
+    <div class="ad-results">
+      <div class="item-wrapper" *ngFor="let item of analyticsDashboardObjects" [style.background-color]="item.total_votes === 0 ? '#eee' :
+  (item.total_positive_votes === item.total_votes) ? '#dcf5ed' :
+  (item.total_positive_votes > 0 && item.total_positive_votes < item.total_votes) ? '#d5dbf6' : '#ffdede'">
+
+        <div class="item-name">
+          <a routerLink="/card/{{ item.card_id }}"> {{ item.card_name }}</a>
+        </div>
+
+        <div class="item-actions">
+          <div class="success-count">▲ <span style="color: black;">{{ item.total_positive_votes }}</span></div>
+          <div class="missed-count">▼ <span style="color: black;">{{ item.total_votes-item.total_positive_votes
+              }}</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <main class="account">

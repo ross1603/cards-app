@@ -62,3 +62,11 @@ export interface interfaceAnalyticsSidebar {
   count: number,
   votes: string
 }
+
+export interface interfaceAnalyticsDashboard {
+  card_id: number,
+  card_name: string,
+  collection_name: string,
+  total_votes: number,
+  total_positive_votes: number
+}

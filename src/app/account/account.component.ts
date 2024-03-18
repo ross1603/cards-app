@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { interfaceAccount, interfaceUnique, interfaceMigrations } from '../interfaces';
+import { interfaceAccount, interfaceUnique, interfaceMigrations, interfaceAnalyticsDashboard } from '../interfaces';
 import { ServicesService } from '../services.service';
 
 @Component({
@@ -23,9 +23,9 @@ export class AccountComponent {
     this.fetchedData = null;
     this.uniqueObjects = null;
     this.migrationObjects = null;
+    this.analyticsDashboardObjects = null;
     this.migrationItem = 0;
   }
-
 
   ngOnDestroy() {
     this.services.isAccount = false;
@@ -43,6 +43,16 @@ export class AccountComponent {
   isVisibleAddCollection: boolean = false;
   noItemsMsg: string = '';
   noItemsMsgCollections: string = '';
+  selectedCategory: string = 'test';
+
+  successCount: number = 0;
+  missedCount: number = 0;
+  mixedCount: number = 0;
+  noneCount: number = 0;
+  successHeight: string = '5%';
+  missedHeight: string = '5%';
+  mixedHeight: string = '5%';
+  noneHeight: string = '5%';
 
   toggleVisibility(arg: string) {
     if (arg == "cards") {
@@ -70,6 +80,7 @@ export class AccountComponent {
   fetchedData: interfaceAccount[] | null;
   uniqueObjects: interfaceUnique[] | null
   migrationObjects: object[] | null;
+  analyticsDashboardObjects: interfaceAnalyticsDashboard[] | null
   migrationItem: string | number;
   token: string | null = localStorage.getItem('token');
 
@@ -152,6 +163,11 @@ export class AccountComponent {
   // ANALYTICS DASHBOARD
 
   public analyticsDashboard(arg: number) {
+    this.successCount = 0;
+    this.missedCount = 0;
+    this.mixedCount = 0;
+    this.noneCount = 0;
+
     let collection_id: number = arg
     if (arg == 0) {
       collection_id = this.form_analytics_dashboard?.value.collection_id;
@@ -161,15 +177,50 @@ export class AccountComponent {
     };
     const apiUrl: string = 'http://localhost:3000/api/account/analytics';
 
-    this.http.post(apiUrl, postData, {
+    this.http.post<interfaceAnalyticsDashboard[]>(apiUrl, postData, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `${this.token}`
       }
     })
       .subscribe(
-        (response: object) => {
-          console.log(response);
+        (response) => {
+          this.analyticsDashboardObjects = response;
+          this.selectedCategory = response[0].collection_name;
+          console.log(this.analyticsDashboardObjects);
+
+          for (let i = 0; i < this.analyticsDashboardObjects.length; i++) {
+            if (this.analyticsDashboardObjects[i].total_votes == 0) {
+              this.noneCount += 1;
+            }
+            else if (this.analyticsDashboardObjects[i].total_positive_votes == this.analyticsDashboardObjects[i].total_votes) {
+              this.successCount += 1;
+            }
+            else if (this.analyticsDashboardObjects[i].total_positive_votes < this.analyticsDashboardObjects[i].total_votes && this.analyticsDashboardObjects[i].total_positive_votes >= 1) {
+              this.mixedCount += 1;
+            }
+            else if (this.analyticsDashboardObjects[i].total_positive_votes == 0 && this.analyticsDashboardObjects[i].total_votes >= 1) {
+              this.missedCount += 1;
+            }
+          }
+
+          this.successHeight = `${Math.round((this.successCount / this.analyticsDashboardObjects.length) * 100)}%`;
+          this.missedHeight = `${Math.round((this.missedCount / this.analyticsDashboardObjects.length) * 100)}%`;
+          this.mixedHeight = `${Math.round((this.mixedCount / this.analyticsDashboardObjects.length) * 100)}%`;
+          this.noneHeight = `${Math.round((this.noneCount / this.analyticsDashboardObjects.length) * 100)}%`;
+
+          if (this.successHeight == '0%') {
+            this.successHeight = '5%';
+          }
+          if (this.missedHeight == '0%') {
+            this.missedHeight = '5%';
+          }
+          if (this.mixedHeight == '0%') {
+            this.mixedHeight = '5%';
+          }
+          if (this.noneHeight == '0%') {
+            this.noneHeight = '5%';
+          }
         },
         (error) => {
           this.services.msgModal("Something went wrong. Please contact support.", false);
