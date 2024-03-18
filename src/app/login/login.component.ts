@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { ServicesService } from '../services.service';
 
 @Component({
   selector: 'app-login',
@@ -15,17 +16,18 @@ import { Router } from '@angular/router';
 })
 
 export class LoginComponent {
+  constructor(private http: HttpClient, private router: Router, public services: ServicesService) {
+    this.services.isSignup = true;
+  }
   @ViewChild('form_login', { static: false }) form_login?: NgForm;
   displayResponse: string = '';
   buttonColor: string = 'red';
 
   ngOnInit() {
-    let token: string | null = localStorage.getItem('token');
-    if (token) {
+    if (this.services.loggedIn()) {
       this.router.navigate(['/account']);
     }
   }
-  constructor(private http: HttpClient, private router: Router) { }
 
   onSubmit() {
     const postData: object = {
@@ -42,11 +44,11 @@ export class LoginComponent {
     })
       .subscribe(
         (response: object) => {
-          this.buttonColor='green';
+          this.buttonColor = 'green';
           this.displayResponse = "You've logged in successfully. Redirecting to account shortly...";
           localStorage.setItem('token', String(response));
           setTimeout(() => {
-            window.location.replace("/account");
+            this.router.navigate(["/account"]);
           }, 3000);
 
         },

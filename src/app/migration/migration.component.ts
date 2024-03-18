@@ -17,12 +17,16 @@ import { ServicesService } from '../services.service';
 })
 
 export class MigrationComponent {
-  @ViewChild('form_migration', { static: false }) form_migration?: NgForm;
-  @ViewChild('form_insert', { static: false }) form_insert?: NgForm;
-
   constructor(private http: HttpClient, private router: Router, public services: ServicesService) {
     this.fetchedData = null;
+    this.services.isAccount = true;
   }
+  @ViewChild('form_migration', { static: false }) form_migration?: NgForm;
+  @ViewChild('form_insert', { static: false }) form_insert?: NgForm;
+  ngOnDestroy() {
+    this.services.isAccount = false;
+  }
+
   total: number = 0;
   fetchedData: interfaceMigrations[] | null;
   token: string | null = localStorage.getItem('token');

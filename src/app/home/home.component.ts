@@ -16,6 +16,11 @@ import { FormsModule, NgForm } from '@angular/forms';
 })
 
 export class HomeComponent {
+  constructor(public http: HttpClient, public services: ServicesService, private Router: Router) {
+    this.fetchedData = null;
+    this.recommendedData = null;
+    this.services.isSignup = false;
+  }
   @ViewChild('form_search', { static: false }) form_search?: NgForm;
 
   currentCard: string = '';
@@ -28,10 +33,6 @@ export class HomeComponent {
   voteDiv: boolean = false;
   fetchedData: interfaceHome[] | null;
   recommendedData: interfaceRecommended[] | null;
-  constructor(public http: HttpClient, public services: ServicesService, private Router: Router) {
-    this.fetchedData = null;
-    this.recommendedData = null;
-  }
 
   public onSubmit() {
     console.log(`${this.form_search!.value.search}`);

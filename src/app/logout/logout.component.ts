@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { Router } from '@angular/router';
+import { ServicesService } from '../services.service';
 
 @Component({
   selector: 'app-logout',
@@ -10,16 +11,14 @@ import { Router } from '@angular/router';
   styleUrl: './logout.component.css'
 })
 export class LogoutComponent {
+  constructor(private router: Router, private services: ServicesService) { }
   ngOnInit() {
-    let token: string | null = localStorage.getItem('token');
-    if (token) {
+    if (this.services.loggedIn()) {
       localStorage.removeItem('token');
-      window.location.replace('/');
+      this.router.navigate(['/']);
     }
     else {
-      window.location.replace('/login');
+      this.router.navigate(['/login']);
     }
   }
-  constructor(private router: Router) { }
-
 }

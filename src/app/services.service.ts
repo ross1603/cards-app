@@ -8,9 +8,10 @@ import { interfaceAnalyticsSidebar } from './interfaces'
 export class ServicesService {
   constructor(public http: HttpClient) { }
 
-  // LOGGED IN 
+  // LOGGED IN & GENERAL STATE
 
   isLogged: boolean = false;
+  isSignup: boolean = false;
   public loggedIn() {
     if (localStorage.getItem('token') && localStorage.getItem('token') != null) {
       this.isLogged = true;
@@ -157,7 +158,7 @@ export class ServicesService {
   }
 
   // ANALYTICS SIDEBAR
-
+  isAccount: boolean = false;
   analyticsTotal: number = 0;
   analyticsYes: number = 0;
   analyticsNo: number = 0;
@@ -176,11 +177,22 @@ export class ServicesService {
             // No action needed.
           }
           else if (data.length == 1) {
-            this.analyticsYes = data[0].count;
+            if (data[0].votes == "yes") {
+              this.analyticsYes = data[0].count;
+            }
+            else {
+              this.analyticsYes = data[1].count;
+            }
           }
           else {
-            this.analyticsYes = data[0].count;
-            this.analyticsNo = data[1].count;
+            if (data[0].votes == "yes") {
+              this.analyticsYes = data[0].count;
+              this.analyticsNo = data[1].count;
+            }
+            else {
+              this.analyticsYes = data[1].count;
+              this.analyticsNo = data[0].count;
+            }
           }
           this.analyticsTotal = this.analyticsNo + this.analyticsYes;
 

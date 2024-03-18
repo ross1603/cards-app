@@ -16,6 +16,19 @@ import { ServicesService } from '../services.service';
 })
 
 export class AccountComponent {
+  constructor(public http: HttpClient, private router: Router, public services: ServicesService) {
+    this.services.isAccount = true;
+    this.services.isLogged = true;
+    this.services.isSignup = false;
+    this.fetchedData = null;
+    this.uniqueObjects = null;
+    this.migrationObjects = null;
+    this.migrationItem = 0;
+  }
+
+  ngOnDestroy() {
+    this.services.isAccount = false;
+  }
   @ViewChild('form_add_card', { static: false }) form_add_card?: NgForm;
   @ViewChild('form_add_collection', { static: false }) form_add_collection?: NgForm;
   @ViewChild('form_analytics_dashboard', { static: false }) form_analytics_dashboard?: NgForm;
@@ -27,6 +40,7 @@ export class AccountComponent {
   isVisibleAddCard: boolean = false;
   isVisibleAddCollection: boolean = false;
   noItemsMsg: string = '';
+  noItemsMsgCollections: string = '';
 
   toggleVisibility(arg: string) {
     if (arg == "cards") {
@@ -57,12 +71,6 @@ export class AccountComponent {
   migrationItem: string | number;
   token: string | null = localStorage.getItem('token');
 
-  constructor(public http: HttpClient, private router: Router, public services: ServicesService) {
-    this.fetchedData = null;
-    this.uniqueObjects = null;
-    this.migrationObjects = null;
-    this.migrationItem = 0;
-  }
   ngOnInit() {
     const apiUrl: string = 'http://localhost:3000/api/account';
     const postData: object = {
@@ -101,7 +109,11 @@ export class AccountComponent {
             }
           }
 
-          this.analyticsDashboard(this.uniqueObjects[this.uniqueObjects.length - 1].id);
+          if (this.fetchedData.length == 0 || this.uniqueObjects.length == 0 || !this.fetchedData || !this.uniqueObjects) {
+          }
+          else {
+            this.analyticsDashboard(this.uniqueObjects[this.uniqueObjects.length - 1].id);
+          }
 
           this.uniqueObjects = this.uniqueObjects.slice().reverse();
 
@@ -120,14 +132,17 @@ export class AccountComponent {
 
           this.migrationItem = String(this.migrationObjects);
 
-          if (this.fetchedData.length == 0 || this.uniqueObjects.length == 0) {
+          if (this.fetchedData.length == 0 || !this.fetchedData) {
             this.toggleVisibility("cards");
-            this.noItemsMsg = 'No items to display.';
+            this.noItemsMsg = `You don't have any cards yet.`;
+          }
+          if (this.uniqueObjects.length == 0 || !this.uniqueObjects) {
+            this.noItemsMsgCollections = `You don't have any collections yet.`;
           }
         },
         (error) => {
           console.error('POST error:', error);
-          window.location.replace('/logout');
+          this.router.navigate(['/logout']);
         }
       );
   }

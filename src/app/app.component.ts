@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { RouterOutlet, RouterModule, Routes } from '@angular/router';
+import { RouterOutlet, RouterModule, Routes, Router } from '@angular/router';
 import { AccountComponent } from './account/account.component';
 import { CommonModule } from '@angular/common';
 import { HomeComponent } from './home/home.component';
@@ -16,30 +16,16 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 })
 
 export class AppComponent {
-  constructor(public services: ServicesService, private http: HttpClient) {
+  constructor(public services: ServicesService, private http: HttpClient, private router: Router) {
+    this.services.isSignup = false;
+    this.services.isAccount = false;
+    this.services.isLogged = this.services.loggedIn();
   }
-  isSignup: boolean = false;
   isLoaded: boolean = false;
-  isAccount: boolean = false;
-  currentUrl = (window.location.href).split('/');
-  isLogged: boolean = false;
 
   ngOnInit() {
-    this.services.getAnalyticsSidebar();
-
-    if (this.currentUrl[3] == "login" || this.currentUrl[3] == "register") {
-      this.isSignup = true;
-    }
-    if (this.currentUrl[3] == "account" || this.currentUrl[3] == "migration") {
-      this.isAccount = true;
-    }
-
-    let token: string | null = localStorage.getItem('token');
-    if (token) {
-      this.isLogged = true;
-    }
-    else {
-      this.isLogged = false;
+    if (this.services.loggedIn()) {
+      this.services.getAnalyticsSidebar();
     }
     setTimeout(() => {
       this.isLoaded = true;

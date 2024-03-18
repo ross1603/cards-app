@@ -3,7 +3,8 @@
 </div>
 
 <div class="collections-container" *ngIf="fetchedData && showAll">
-  <div class="collections-item" *ngFor="let item of fetchedData" [routerLink]="['/', link, item.id]" style="display: flex;">
+  <div class="collections-item" *ngFor="let item of fetchedData" [routerLink]="['/', link, item.id]"
+    style="display: flex;">
     <a routerLink="/{{ link }}/{{ item.id }}"> {{ item.name }} {{ item.front }} </a>
   </div>
 </div>
@@ -19,8 +20,10 @@
 
         <div class="vote-text" *ngIf="voteDiv && services.loggedIn()">DID YOU ANSWER CORRECTLY?</div>
         <div class="vote" *ngIf="voteDiv && services.loggedIn()">
-          <button class="vote-button yes" (click)="services.vote('yes', currentCardId)" [disabled]="services.voted">▲</button>
-          <button class="vote-button no" (click)="services.vote('no', currentCardId)" [disabled]="services.voted">▼</button>
+          <button class="vote-button yes" (click)="services.vote('yes', currentCardId)"
+            [disabled]="services.voted">▲</button>
+          <button class="vote-button no" (click)="services.vote('no', currentCardId)"
+            [disabled]="services.voted">▼</button>
         </div>
       </div>
       <div class="card-actions">
@@ -48,16 +51,16 @@
   RECOMMENDED COLLECTIONS:
 </div>
 
-<div class="collections-container" *ngIf="recommendedData && !showAll" style="margin-top: 2vh;">
+<div class="collections-container" *ngIf="recommendedData && !showAll" style="margin-top: 2vh;" (click)="ngOnInit()">
   <div class="collections-item" *ngFor="let item_recommended of recommendedData"
-      [routerLink]="['/collections/', item_recommended.id]">
-      <div class="ci-1">OPEN COLLECTION ►
+    [routerLink]="['/collections/', item_recommended.id]">
+    <div class="ci-1">OPEN COLLECTION ►
 
-      </div>
-      <div class="ci-2">
-          <a routerLink="/collections/{{ item_recommended.id }}"> {{ item_recommended.name }} </a><br>
-          <br><span class="ci-count">{{item_recommended.count }} {{ item_recommended.count === 1 ? 'card' : 'cards'
-              }}</span>
-      </div>
+    </div>
+    <div class="ci-2">
+      <a routerLink="/collections/{{ item_recommended.id }}"> {{ item_recommended.name }} </a><br>
+      <br><span class="ci-count">{{item_recommended.count }} {{ item_recommended.count === 1 ? 'card' : 'cards'
+        }}</span>
+    </div>
   </div>
 </div>

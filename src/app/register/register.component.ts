@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { ServicesService } from '../services.service';
 
 @Component({
   selector: 'app-register',
@@ -15,19 +16,19 @@ import { CommonModule } from '@angular/common';
 })
 
 export class RegisterComponent {
+  constructor(private http: HttpClient, private router: Router, public services: ServicesService) {
+    this.services.isSignup = true;
+  }
+
   @ViewChild('form_register', { static: false }) form_register?: NgForm;
   displayResponse: string = '';
   buttonColor: string = 'red';
 
   ngOnInit() {
-    let token: string | null = localStorage.getItem('token');
-    if (token) {
+    if (this.services.loggedIn()) {
       this.router.navigate(['/account']);
     }
   }
-
-  constructor(private http: HttpClient, private router: Router) { }
-
   onSubmit() {
     const postData: object = {
       username: this.form_register?.value.username,
@@ -46,7 +47,7 @@ export class RegisterComponent {
           this.buttonColor = 'green';
           this.displayResponse = "Successfully registered ! Redirecting to login shortly...";
           setTimeout(() => {
-            window.location.replace("/login");
+            this.router.navigate(["/login"]);
           }, 3000);
         },
         (error) => {

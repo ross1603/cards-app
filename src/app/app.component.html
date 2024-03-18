@@ -1,4 +1,4 @@
-<main class="grid-container" *ngIf="!isSignup">
+<main class="grid-container" *ngIf="!services.isSignup">
     <header class="header col">
         <div class="header-content">
             <div class="logo">
@@ -15,10 +15,11 @@
                 <a routerLink="/" class="navLink">HOME</a>
                 <a routerLink="/collections" class="navLink">COLLECTIONS</a>
                 <a routerLink="/account" class="navLink">ACCOUNT</a>
-                <a *ngIf="!isLogged" href="/login" class="navLink"> LOGIN</a> <a *ngIf="!isLogged" href="/register"
+                <a *ngIf="!services.loggedIn()" routerLink="/login" class="navLink"> LOGIN</a> <a *ngIf="!services.loggedIn()"
+                    routerLink="/register"
                     style="border: 1px solid black; border-radius: 15px; padding: 1vh; background-color: lightcoral; font-weight: bold;">GET
                     STARTED</a>
-                <a *ngIf="isLogged" href="/logout" class="navLink">LOGOUT</a>
+                <a *ngIf="services.loggedIn()" routerLink="/logout" class="navLink">LOGOUT</a>
             </nav>
         </div>
     </header>
@@ -26,8 +27,8 @@
         <a routerLink="/">HOME</a>
         <a routerLink="/collections">COLLECTIONS</a>
         <a routerLink="/account">ACCOUNT</a>
-        <a *ngIf="!isLogged" href="/login"> LOGIN</a> <a *ngIf="!isLogged" href="/register"> REGISTER</a>
-        <a *ngIf="isLogged" href="/logout"> LOGOUT</a>
+        <a *ngIf="!services.loggedIn()" routerLink="/login"> LOGIN</a> <a *ngIf="!services.loggedIn()" routerLink="/register"> REGISTER</a>
+        <a *ngIf="services.loggedIn()" routerLink="/logout"> LOGOUT</a>
     </nav>
     <section class="main col" *ngIf="isLoaded">
         <div class="content">
@@ -67,7 +68,7 @@
     </section>
 </main>
 
-<main class="grid-container" *ngIf="isSignup">
+<main class="grid-container" *ngIf="services.isSignup">
     <router-outlet></router-outlet>
 </main>
 
@@ -75,7 +76,7 @@
     <div> {{ this.services.msgToModal }}</div>
 </div>
 
-<div class="analytics-sidebar" *ngIf="!isSignup && !isAccount && isLogged">
+<div class="analytics-sidebar" *ngIf="!services.isSignup && !services.isAccount && services.loggedIn()">
     <div class="analytics-wrapper">
         <img src="./assets/analytics-icon.png"><br>
         <span class="analytics-title">ANALYTICS</span><br><br>

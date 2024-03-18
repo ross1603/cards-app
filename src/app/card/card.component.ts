@@ -15,6 +15,11 @@ import { ServicesService } from '../services.service';
   styleUrl: './card.component.css'
 })
 export class CardComponent {
+  constructor(public http: HttpClient, private activatedRoute: ActivatedRoute, private router: Router, public services: ServicesService) {
+    this.fetchedData = null;
+    this.recommendedData = null;
+  }
+
   isTrue: boolean = false;
   buttonColor: string = "#1419a6";
   cardActions: string = 'SHOW ANSWER';
@@ -32,10 +37,6 @@ export class CardComponent {
 
   fetchedData: interfaceCard[] | null;
   recommendedData: interfaceRecommended[] | null;
-  constructor(public http: HttpClient, private activatedRoute: ActivatedRoute, private router: Router, public services: ServicesService) {
-    this.fetchedData = null;
-    this.recommendedData = null;
-  }
 
   public getRecommended() {
     const apiUrl: string = 'http://localhost:3000/api/recommended';

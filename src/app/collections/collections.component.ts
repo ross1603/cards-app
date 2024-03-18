@@ -14,6 +14,11 @@ import { ServicesService } from '../services.service';
   styleUrl: './collections.component.css'
 })
 export class CollectionsComponent {
+  constructor(public http: HttpClient, private activatedRoute: ActivatedRoute, private router: Router, public services: ServicesService) {
+    this.fetchedData = null;
+    this.recommendedData = null;
+  }
+
   fetchedData: interfaceCollections[] | null;
   recommendedData: interfaceRecommended[] | null;
 
@@ -28,11 +33,6 @@ export class CollectionsComponent {
   buttonColor: string = "#1419a6";
   cardActions: string = 'SHOW ANSWER';
   voteDiv: boolean = false;
-
-  constructor(public http: HttpClient, private activatedRoute: ActivatedRoute, private router: Router, public services: ServicesService) {
-    this.fetchedData = null;
-    this.recommendedData = null;
-  }
 
   ngOnInit() {
     let col_id: string | null = this.activatedRoute.snapshot.paramMap.get('id');
