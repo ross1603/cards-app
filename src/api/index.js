@@ -4,7 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
-const encryption = require('crypto');	
+const encryption = require('crypto');
 
 const app = express();
 const secret = 'QZWmxwXH8h1hN/g57/pOqg==';
@@ -104,7 +104,11 @@ app.get('/api/home', (req, res) => {
     connectDB();
 
     con.connect(function (err) {
-        con.query("SELECT id, front, back FROM cards WHERE is_public = 1 ORDER by id DESC LIMIT 50", function (err, result, fields) {
+        con.query(`SELECT id, front, back,
+        (SELECT COUNT(*) from collections) as total_collections,
+        (SELECT COUNT(*) from cards) as total_cards,
+        (SELECT COUNT(*) from users) as total_users
+         FROM cards WHERE is_public = 1 ORDER by id DESC LIMIT 50`, function (err, result, fields) {
             if (err) {
                 console.log(err);
                 res.status(400).json(`api/home: Invalid request.`);
@@ -116,6 +120,31 @@ app.get('/api/home', (req, res) => {
             }
         });
     });
+});
+
+// Search
+
+app.post('/api/search', (req, res) => {
+    let search = String(req.body.search);
+
+    connectDB();
+
+    con.connect(function (err) {
+        con.query(`SELECT cards.id as card_id, cards.front as card_name, collections.id as collection_id, collections.name as collection_name
+     FROM cards INNER JOIN collections on collections.id=cards.collection_id
+     WHERE cards.is_public = 1 AND (cards.front LIKE '%${search}%' OR collections.name LIKE '%${search}%') limit 10`, function (err, result, fields) {
+            if (err) {
+                console.log(err);
+                res.status(400).json(`api/search: Invalid request.`);
+                con.end();
+            }
+            else {
+                res.status(200).json(result);
+                con.end();
+            }
+        });
+    });
+
 });
 
 // Analytics sidebar
@@ -163,7 +192,7 @@ app.post('/api/account/analytics', (req, res) => {
         connectDB();
 
         con.connect(function (err) {
-            con.query(`select cards.id as card_id, cards.front as card_name,
+            con.query(`select cards.id as card_id, cards.front as card_name, collections.name as collection_name,
             (SELECT COUNT(*) from analytics where analytics.card_id=cards.id and user_id = ${user_id}) as total_votes,
             (SELECT COUNT(*) from analytics where analytics.card_id=cards.id and user_id = ${user_id} AND vote = 1) as total_positive_votes
             from cards inner join collections on collections.id=cards.collection_id 

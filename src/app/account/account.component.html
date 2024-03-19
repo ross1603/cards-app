@@ -168,8 +168,8 @@
           <div class="account-dropdown">
             <button class="account-dropbutton">⋮</button>
             <div class="account-dropdown-content">
-              <a routerLink="/account#" (click)="editItem('card', item.card_id)">edit</a>
-              <a routerLink="/account#" (click)="removeItem('card', item.card_id)">delete</a>
+              <a href="/account#" (click)="editItem('card', item.card_id)">edit</a>
+              <a href="/account#" (click)="removeItem('card', item.card_id)">delete</a>
             </div>
           </div>
         </div>
@@ -195,8 +195,8 @@
           <div class="account-dropdown">
             <button class="account-dropbutton">⋮</button>
             <div class="account-dropdown-content">
-              <a routerLink="/account#" (click)="editItem('collection', item.id)">edit</a>
-              <a routerLink="/account#" (click)="removeItem('collection', item.id)">delete</a>
+              <a href="/account#" (click)="editItem('collection', item.id)">edit</a>
+              <a href="/account#" (click)="removeItem('collection', item.id)">delete</a>
             </div>
           </div>
         </div>
@@ -221,7 +221,7 @@
           <div class="account-dropdown">
             <button class="account-dropbutton">⋮</button>
             <div class="account-dropdown-content">
-              <a routerLink="/account#" (click)="removeItem('migration', migrationItem)">delete</a>
+              <a href="/account#" (click)="removeItem('migration', migrationItem)">delete</a>
             </div>
           </div>
         </div>
@@ -233,7 +233,7 @@
 </main>
 
 <div style="float: right; margin-top: 3vh;">
-  <a routerLink="/account#" (click)="removeItem('user', 1)" class="delete-button">DELETE ACCOUNT</a>
+  <a href="/account#" (click)="removeItem('user', 1)" class="delete-button">DELETE ACCOUNT</a>
 </div>
 <div style="height: 65px; width: 100%;">
   &nbsp;

@@ -26,7 +26,7 @@ export class ServicesService {
   shareButton: string = 'SHARE';
 
   public share(arg: string) {
-    navigator.clipboard.writeText(arg);
+    navigator.clipboard.writeText(`http://localhost:4200/${arg}`);
     this.shareButton = 'COPIED';
     setTimeout(() => {
       this.shareButton = 'SHARE';

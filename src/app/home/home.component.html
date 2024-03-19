@@ -8,11 +8,22 @@
 
     <form #form_search="ngForm" (ngSubmit)="onSubmit()" class="form_search">
 
-      <div>
+      <div class="search-container">
         <label for="search"></label>
-        <input type="search" id="search" name="search" ngModel required minlength="3"
-          placeholder="Search a card or collection." style="border: 1px solid grey !important;">
-        <button type="submit" id="submit" [disabled]="!form_search.valid">Search</button>
+        <input type="search" id="search" name="search" class="{{ searchInputClass }}" ngModel required minlength="3"
+          placeholder="Search a card or collection." style="border: 1px solid grey !important;"
+          (keyup)="form_search.value.search.length >= 4 && searchInput()" (focusout)="closeSearch()" autocomplete="off">
+        <button type="submit" id="submit" [disabled]="!form_search.valid">SEARCH</button>
+        <div class="search-results" *ngIf="searchData && !isSearchClosed">
+
+          <div *ngFor="let item_search of searchData, index as i" class="search-item"
+            style="background-color: {{ i % 2 == 0 ? 'white' : '#f9f9f9' }}"
+            [routerLink]="['/card/', item_search.card_id]">
+            {{ this.searchDataValid === true ? item_search.card_name : "" }}
+          </div>
+          <div class="search-item" *ngIf="!searchDataValid">No matching records.</div>
+
+        </div>
       </div>
     </form>
 
@@ -28,7 +39,7 @@
       <br>
       <span class="stats-text-type">CARDS</span>
       <br><br>
-      <span class="stats-text-count">33+</span>
+      <span class="stats-text-count">{{ total_cards }}+</span>
       <span class="stats-text-descr">Huge variety of cards available ready to be learned!</span>
     </div>
   </div>
@@ -37,7 +48,7 @@
       <br>
       <span class="stats-text-type">COLLECTIONS</span>
       <br><br>
-      <span class="stats-text-count">15+</span>
+      <span class="stats-text-count">{{ total_collections }}+</span>
       <span class="stats-text-descr">Numerous collections in variety of topics to choose from.</span>
     </div>
   </div>
@@ -46,7 +57,7 @@
       <br>
       <span class="stats-text-type">USERS</span>
       <br><br>
-      <span class="stats-text-count">10+</span>
+      <span class="stats-text-count">{{ total_users }}+</span>
       <span class="stats-text-descr">Ever increasing users base that continuosly contribute to the success of the
         project.</span>
       <br><br>

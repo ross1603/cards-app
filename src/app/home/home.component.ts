@@ -2,7 +2,7 @@ import { Component, Input, ViewChild } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { interfaceHome, interfaceRecommended } from '../interfaces'
+import { interfaceHome, interfaceRecommended, interfaceSearch } from '../interfaces'
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ServicesService } from '../services.service';
 import { FormsModule, NgForm } from '@angular/forms';
@@ -20,6 +20,7 @@ export class HomeComponent {
     this.fetchedData = null;
     this.recommendedData = null;
     this.services.isSignup = false;
+    this.searchData = null;
   }
   @ViewChild('form_search', { static: false }) form_search?: NgForm;
 
@@ -31,11 +32,71 @@ export class HomeComponent {
   cardActions: string = 'SHOW ANSWER';
   selectShape: string = 'remembershape';
   voteDiv: boolean = false;
+
   fetchedData: interfaceHome[] | null;
   recommendedData: interfaceRecommended[] | null;
+  searchData: interfaceSearch[] | null;
+
+  total_users: number = 0;
+  total_cards: number = 0;
+  total_collections: number = 0;
 
   public onSubmit() {
     console.log(`${this.form_search!.value.search}`);
+  }
+
+  searchString: string = '';
+  last_time: number = 0;
+  isSearchClosed: boolean = false;
+  searchDataValid: boolean = false;
+  searchInputClass: string = '';
+
+  public closeSearch() {
+    setTimeout(() => {
+    this.searchInputClass = '';
+    this.isSearchClosed = true;
+  }, 100);
+  }
+
+  public searchInput() {
+    this.isSearchClosed = false;
+    this.searchInputClass = 'no-border-radius';
+    let time: Date = new Date();
+    let timestamp: number = time.getTime();
+    if (timestamp - this.last_time <= 1000) {
+      this.searchString = this.form_search!.value.search;
+    }
+    else {
+      this.last_time = timestamp;
+      setTimeout(() => {
+        // Handle search here..
+        let postData: object = {
+          search: this.searchString
+        }
+        const apiUrl: string = 'http://localhost:3000/api/search';
+        this.http.post<interfaceSearch[]>(apiUrl, postData)
+          .subscribe(
+            (data) => {
+              this.searchData = data;
+              console.log(this.searchData);
+              if (this.searchData.length == 0) {
+                this.searchDataValid = false;
+              }
+              else {
+                this.searchDataValid = true;
+              }
+
+            },
+            (error) => {
+              console.error('Error fetching data:', error);
+            }
+          );
+
+
+      }, 1000);
+      this.searchString = '';
+
+    }
   }
 
   public getRecommended() {
@@ -63,6 +124,11 @@ export class HomeComponent {
           this.currentCardBack = data[0].back;
           this.currentCardId = data[0].id;
           this.nextCard = 1;
+
+          this.total_cards = data[0].total_cards;
+          this.total_collections = data[0].total_collections;
+          this.total_users = data[0].total_users;
+
         },
         (error) => {
           console.error('Error fetching data:', error);

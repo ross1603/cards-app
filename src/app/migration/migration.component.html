@@ -1,6 +1,6 @@
 <div class="account-top-menu">
     <div class="menu-left">
-        <a routerLink="#">ACCOUNT MANAGEMENT</a>
+        <a href="/account#">ACCOUNT MANAGEMENT</a>
     </div>
     <div class="menu-right">
         <a routerLink="/account">BACK TO ACCOUNT</a>
@@ -22,7 +22,7 @@
             <input type="password" id="api_key" name="api_key" placeholder="Enter API key here..." required
                 minlength="3" ngModel>
             <div></div>
-            <button type="submit" id="submit">Migrate</button>
+            <button type="submit" id="submit" [disabled]="!form_migration.valid">Migrate</button>
         </form>
 
         <!-- Step 2 from migration -->

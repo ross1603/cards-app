@@ -2,6 +2,9 @@ export interface interfaceHome {
   id: number;
   front: string;
   back: string;
+  total_cards: number,
+  total_collections: number,
+  total_users: number,
 }
 
 export interface interfaceCollections {
@@ -69,4 +72,11 @@ export interface interfaceAnalyticsDashboard {
   collection_name: string,
   total_votes: number,
   total_positive_votes: number
+}
+
+export interface interfaceSearch {
+  card_id: number,
+  card_name: string,
+  collection_id: number,
+  collection_name: string,
 }

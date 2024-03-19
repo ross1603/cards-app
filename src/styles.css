@@ -311,7 +311,6 @@ body {
 	;
 }
 
-
 .card-display-container {
 	display: grid;
 	grid: 'card' 5fr 'actions' 1fr;
@@ -320,6 +319,8 @@ body {
 	border-left: 1px solid #8a8a8a;
 	border-right: 1px solid #8a8a8a;
 	border-bottom: 1px solid #8a8a8a;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
 	height: 100%;
 }
 

@@ -391,10 +391,16 @@ span {
     border: none;
 }
 
+.account-dropdown {
+    position: relative;
+}
+
 .account-dropdown-content {
     display: none;
     position: absolute;
     z-index: 99999;
+    right: -5px;
+    top: -10px;
     background-color: #f1f1f1;
     min-width: 100px;
     box-shadow: 5px 9px 15px 1px rgba(0, 0, 0, 0.1);
