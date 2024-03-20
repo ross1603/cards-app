@@ -15,9 +15,20 @@
       <div>
         <label for="password"></label>
         <input type="password" id="password" name="password" ngModel required minlength="3"
-          placeholder="Enter password.">
+          placeholder="Enter password." [pattern]="passwordRegex"
+          (keyup)="form_register.value.password.length >= 1 && showValidations = true"
+          (focusout)="showValidations = false" (keyup)="passwordCheck()">
         <br><br>
-        <span class="signup_text">Already have an account? <a routerLink="/login">Login</a> now.</span>
+        <span class="signup_text">Already have an account? <a routerLink="/login">Login</a> now.</span><br><br>
+        <span class="register_validation" *ngIf="showValidations">Password must contain:</span>
+        <div class="register_validation" *ngIf="showValidations">
+          <br><br>
+          <span class="register_validation" [style.color]="rvColorL">At least one lowercase</span><br>
+          <span class="register_validation" [style.color]="rvColorU">At least one uppercase</span><br>
+          <span class="register_validation" [style.color]="rvColorN">At least one number</span><br>
+          <span class="register_validation" [style.color]="rvColorS">At least one symbol</span><br>
+          <span class="register_validation" [style.color]="rvColor8">Minimum 8 characters</span>
+        </div>
       </div>
       <div>
         <button type="submit" id="submit" [disabled]="!form_register.valid">Submit</button>

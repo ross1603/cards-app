@@ -4,7 +4,7 @@
 
 <div class="collections-container" *ngIf="fetchedData && showAll">
   <div class="collections-item" *ngFor="let item of fetchedData" [routerLink]="['/', link, item.id]"
-    style="display: flex;">
+    style="display: grid;">
     <a routerLink="/{{ link }}/{{ item.id }}"> {{ item.name }} {{ item.front }} </a>
   </div>
 </div>
@@ -39,8 +39,8 @@
       <div class="latest-cards">LATEST CARDS</div>
       <div class="buttons-list">
         <button *ngFor="let item of fetchedData, index as i" (click)="changeCard(item.front, item.back, i, item.id)">
-          <span style="font-size: 20px; color: green;" *ngIf="i == nextCard-1">●</span>
-          {{ item.front }}
+          <span style="font-size: 20px; color: green; vertical-align: middle; margin-right: 5px;" *ngIf="i == nextCard-1">●</span>
+          <span style="vertical-align: middle;">{{ item.front }}</span>
         </button>
       </div>
     </div>

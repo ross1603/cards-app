@@ -87,7 +87,7 @@ export class CardComponent {
         },
         (error) => {
           if (error) {
-            console.log(error);
+            console.error(error);
             this.router.navigate(['./']);
           }
         }

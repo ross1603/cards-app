@@ -41,10 +41,6 @@ export class HomeComponent {
   total_cards: number = 0;
   total_collections: number = 0;
 
-  public onSubmit() {
-    console.log(`${this.form_search!.value.search}`);
-  }
-
   searchString: string = '';
   last_time: number = 0;
   isSearchClosed: boolean = false;
@@ -53,9 +49,9 @@ export class HomeComponent {
 
   public closeSearch() {
     setTimeout(() => {
-    this.searchInputClass = '';
-    this.isSearchClosed = true;
-  }, 100);
+      this.searchInputClass = '';
+      this.isSearchClosed = true;
+    }, 100);
   }
 
   public searchInput() {
@@ -69,7 +65,6 @@ export class HomeComponent {
     else {
       this.last_time = timestamp;
       setTimeout(() => {
-        // Handle search here..
         let postData: object = {
           search: this.searchString
         }
@@ -78,7 +73,6 @@ export class HomeComponent {
           .subscribe(
             (data) => {
               this.searchData = data;
-              console.log(this.searchData);
               if (this.searchData.length == 0) {
                 this.searchDataValid = false;
               }
@@ -137,6 +131,9 @@ export class HomeComponent {
   }
   ngOnInit() {
     this.getHome();
+    setTimeout(() => {
+      this.services.isLoaded = true;
+    }, 3000);
   }
 
   public changeCard(arg: string, arg2: string, arg3: number, arg4: number) {

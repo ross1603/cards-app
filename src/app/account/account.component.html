@@ -1,320 +1,370 @@
-<div class="account-top-menu">
-  <div class="menu-left">
-    <a href="/account#">ACCOUNT MANAGEMENT</a>
-  </div>
-  <div class="menu-right">
-    <a (click)="toggleVisibility('addcard')">ADD CARD</a>
-    <a (click)="toggleVisibility('addcollection')">ADD COLLECTION</a>
-    <a routerLink="/migration">MIGRATE</a>
-  </div>
-</div>
-
-<div class="actions-container">
-
-  <div class="ac-left">
-
-    <!-- Add collection form -->
-
-    <form #form_add_collection="ngForm" class="form_addcard" (ngSubmit)="onSubmitInsert('form_add_collection')"
-      *ngIf="isVisibleAddCollection">
-      <label for="collection_name"></label>
-      <input type="text" placeholder="Enter a collection name here..." id="collection_name" name="collection_name"
-        required minlength="3" ngModel>
-
-      <button type="submit" id="submit_form_collection" [disabled]="!form_add_collection.valid">Submit</button>
-    </form>
-
-
-    <!-- Add card form -->
-
-    <form #form_add_card="ngForm" (ngSubmit)="onSubmitInsert('form_add_card')" class="form_addcard"
-      *ngIf="isVisibleAddCard">
-      <div class="add-card-container">
-
-        <div class="add-card-inputs">
-          <label for="front"></label>
-          <input type="text" id="front" name="front" placeholder="Enter front side here..." required minlength="3"
-            ngModel>
-          <br>
-          <label for="back"></label>
-          <input type="text" id="back" name="back" placeholder="Enter back side here..." required minlength="3" ngModel>
-        </div>
-
-        <div class="add-card-select">
-          <label for="collection_id"></label>
-          <select *ngIf="uniqueObjects" name="collection_id" required ngModel>
-            <option value="" disabled selected>Select collection</option>
-            <option *ngFor="let item of uniqueObjects" value="{{ item.id }}">
-              {{ item.name }} </option>
-          </select>
-        </div>
-
-        <div class="add-card-radio">
-          <label for="ispublic">Make it public?</label><br>
-          <input type="radio" name="is_public" value="1" class="input-radio" required ngModel><span>Yes</span>
-          <input type="radio" name="is_public" value="0" class="input-radio" required ngModel><span>No</span>
-
-        </div>
-
-
-        <div class="add-card-button">
-          <button type="submit" id="submit_form_card" [disabled]="!form_add_card.valid">Submit</button>
-        </div>
-
-      </div>
-    </form>
-
-  </div>
-
-  <div class="ac-right">
-    <span *ngIf="isVisibleAddCard">ADD CARD</span>
-    <span *ngIf="isVisibleAddCollection">ADD COLLECTION</span>
-  </div>
-
-</div>
-
-<section class="analytics-dashboard-selector">
-
-  <br>
-  <form #form_analytics_dashboard="ngForm" class="form_analytics_dashboard" (ngSubmit)="analyticsDashboard(0)">
-    <select *ngIf="uniqueObjects" name="collection_id" required ngModel>
-      <option value="" disabled selected>Select collection</option>
-      <option *ngFor="let item of uniqueObjects" value="{{ item.id }}">
-        {{ item.name }} </option>
-    </select>
-    <button type="submit" id="submit_analytics" [disabled]="!form_analytics_dashboard.valid">Go!</button>
-  </form>
-
-</section>
-
-<div class="analytics-dashboard-container">
-
-  <div class="ad-left">
-    <div class="graph-container">
-      <div class="gc-t1">
-        {{ successHeight == "5%" ? '0%' : successHeight }}
-      </div>
-      <div class="gc-t2">
-        {{ missedHeight == "5%" ? '0%' : missedHeight }}
-      </div>
-      <div class="gc-t3">
-        {{ mixedHeight == "5%" ? '0%' : mixedHeight }}
-      </div>
-      <div class="gc-t4">
-        {{ noneHeight == "5%" ? '0%' : noneHeight }}
-      </div>
-
-      <div class="gc-c1" [style.height]="successHeight">
-        <span class="tooltip-text-account">The amount of cards that have 100% success rate.</span>
-      </div>
-      <div class="gc-c2" [style.height]="missedHeight">
-        <span class="tooltip-text-account">The amount of cards that have 0% success rate.</span>
-      </div>
-      <div class="gc-c3" [style.height]="mixedHeight">
-        <span class="tooltip-text-account">The amount of cards that have success rate between 1-99%</span>
-      </div>
-      <div class="gc-c4" [style.height]="noneHeight">
-        <span class="tooltip-text-account">The amount of cards with no records of score.</span>
-
-      </div>
+<div *ngIf="services.isLoaded">
+  <div class="account-top-menu">
+    <div class="menu-left">
+      <a href="/account#">ACCOUNT MANAGEMENT</a>
+    </div>
+    <div class="menu-right">
+      <a (click)="toggleVisibility('addcard')">ADD CARD</a>
+      <a (click)="toggleVisibility('addcollection')">ADD COLLECTION</a>
+      <a routerLink="/migration">MIGRATE</a>
     </div>
   </div>
 
-  <div class="ad-right">
-    <div class="item-wrapper"
-      style="padding: 13px; background-color: #ededff; border-bottom: 1px solid black; border-top-left-radius: 5px; border-top-right-radius: 5px;">
-      {{ selectedCategory }}
+  <div class="actions-container">
+
+    <div class="ac-left">
+
+      <!-- Add collection form -->
+
+      <form #form_add_collection="ngForm" class="form_addcard" (ngSubmit)="onSubmitInsert('form_add_collection')"
+        *ngIf="isVisibleAddCollection">
+        <label for="collection_name"></label>
+        <input type="text" placeholder="Enter a collection name here..." id="collection_name" name="collection_name"
+          required minlength="3" ngModel>
+
+        <button type="submit" id="submit_form_collection" [disabled]="!form_add_collection.valid">Submit</button>
+      </form>
+
+
+      <!-- Add card form -->
+
+      <form #form_add_card="ngForm" (ngSubmit)="onSubmitInsert('form_add_card')" class="form_addcard"
+        *ngIf="isVisibleAddCard">
+        <div class="add-card-container">
+
+          <div class="add-card-inputs">
+            <label for="front"></label>
+            <input type="text" id="front" name="front" placeholder="Enter front side here..." required minlength="3"
+              ngModel>
+            <br>
+            <label for="back"></label>
+            <input type="text" id="back" name="back" placeholder="Enter back side here..." required minlength="3"
+              ngModel>
+          </div>
+
+          <div class="add-card-select">
+            <label for="collection_id"></label>
+            <select *ngIf="uniqueObjects" name="collection_id" required ngModel>
+              <option value="" disabled selected>Select collection</option>
+              <option *ngFor="let item of uniqueObjects" value="{{ item.id }}">
+                {{ item.name }} </option>
+            </select>
+          </div>
+
+          <div class="add-card-radio">
+            <label for="ispublic">Make it public?</label><br>
+            <input type="radio" name="is_public" value="1" class="input-radio" required ngModel><span>Yes</span>
+            <input type="radio" name="is_public" value="0" class="input-radio" required ngModel><span>No</span>
+
+          </div>
+
+
+          <div class="add-card-button">
+            <button type="submit" id="submit_form_card" [disabled]="!form_add_card.valid">Submit</button>
+          </div>
+
+        </div>
+      </form>
+
     </div>
-    <div class="ad-results">
-      <div class="item-wrapper" *ngFor="let item of analyticsDashboardObjects" [style.background-color]="item.total_votes === 0 ? '#eee' :
+
+    <div class="ac-right">
+      <span *ngIf="isVisibleAddCard">ADD CARD</span>
+      <span *ngIf="isVisibleAddCollection">ADD COLLECTION</span>
+    </div>
+
+  </div>
+
+  <section class="analytics-dashboard-selector">
+
+    <br>
+    <form #form_analytics_dashboard="ngForm" class="form_analytics_dashboard" (ngSubmit)="analyticsDashboard(0)">
+      <select *ngIf="uniqueObjects" name="collection_id" required ngModel>
+        <option value="" disabled selected>Select collection</option>
+        <option *ngFor="let item of uniqueObjects" value="{{ item.id }}">
+          {{ item.name }} </option>
+      </select>
+      <button type="submit" id="submit_analytics" [disabled]="!form_analytics_dashboard.valid">Go!</button>
+    </form>
+
+  </section>
+
+  <div class="analytics-dashboard-container">
+
+    <div class="ad-left">
+      <div class="graph-container">
+        <div class="gc-t1">
+          {{ successHeight == "5%" ? '0%' : successHeight }}
+        </div>
+        <div class="gc-t2">
+          {{ missedHeight == "5%" ? '0%' : missedHeight }}
+        </div>
+        <div class="gc-t3">
+          {{ mixedHeight == "5%" ? '0%' : mixedHeight }}
+        </div>
+        <div class="gc-t4">
+          {{ noneHeight == "5%" ? '0%' : noneHeight }}
+        </div>
+
+        <div class="gc-c1" [style.height]="successHeight">
+          <span class="tooltip-text-account">The amount of cards that have 100% success rate.</span>
+        </div>
+        <div class="gc-c2" [style.height]="missedHeight">
+          <span class="tooltip-text-account">The amount of cards that have 0% success rate.</span>
+        </div>
+        <div class="gc-c3" [style.height]="mixedHeight">
+          <span class="tooltip-text-account">The amount of cards that have success rate between 1-99%</span>
+        </div>
+        <div class="gc-c4" [style.height]="noneHeight">
+          <span class="tooltip-text-account">The amount of cards with no records of score.</span>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="ad-right">
+      <div class="item-wrapper"
+        style="padding: 13px; background-color: #ededff; border-bottom: 1px solid black; border-top-left-radius: 5px; border-top-right-radius: 5px;">
+        {{ selectedCategory }}
+      </div>
+      <div class="ad-results">
+        <div class="item-wrapper" *ngFor="let item of analyticsDashboardObjects" [style.background-color]="item.total_votes === 0 ? '#eee' :
   (item.total_positive_votes === item.total_votes) ? '#dcf5ed' :
   (item.total_positive_votes > 0 && item.total_positive_votes < item.total_votes) ? '#d5dbf6' : '#ffdede'">
 
-        <div class="item-name">
-          <a routerLink="/card/{{ item.card_id }}"> {{ item.card_name }}</a>
-        </div>
+          <div class="item-name">
+            <a routerLink="/card/{{ item.card_id }}"> {{ item.card_name }}</a>
+          </div>
 
-        <div class="item-actions">
-          <div class="success-count">▲ <span style="color: black;">{{ item.total_positive_votes }}</span></div>
-          <div class="missed-count">▼ <span style="color: black;">{{ item.total_votes-item.total_positive_votes
-              }}</span></div>
+          <div class="item-actions">
+            <div class="success-count">▲ <span style="color: black;">{{ item.total_positive_votes }}</span></div>
+            <div class="missed-count">▼ <span style="color: black;">{{ item.total_votes-item.total_positive_votes
+                }}</span></div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
 
-<main class="account">
+  <main class="account">
 
-  <section class="account-all-cards">
+    <section class="account-all-cards">
 
-    <div class="account-all-title">
-      <span (click)="toggleVisibility('cards')" style="font-size: 2vh; cursor: pointer;">⬍ CARDS</span>
-      <button class="switchSide" (click)="toggleVisibility('switchSide')">↻ SWITCH SIDE</button>
-    </div>
+      <div class="account-all-title">
+        <span (click)="toggleVisibility('cards')" style="font-size: 2vh; cursor: pointer;">⬍ CARDS</span>
+        <button class="switchSide" (click)="toggleVisibility('switchSide')">↻ SWITCH SIDE</button>
+      </div>
 
-    <div class="all" *ngIf="isVisibleCards">
-      <span>{{ noItemsMsg }}</span>
-      <div class="item-wrapper" *ngFor="let item of fetchedData">
+      <div class="all" *ngIf="isVisibleCards">
+        <span>{{ noItemsMsg }}</span>
+        <div class="item-wrapper" *ngFor="let item of fetchedData">
 
-        <div class="item-name">
+          <div class="item-name">
 
-          <a routerLink="/card/{{ item.card_id}}" *ngIf="isVisibleSide"> {{ item.front }}</a>
-          <a routerLink="/card/{{ item.card_id}}" *ngIf="!isVisibleSide"> {{ item.back }}</a>
-        </div>
+            <a routerLink="/card/{{ item.card_id}}" *ngIf="isVisibleSide"> {{ item.front }}</a>
+            <a routerLink="/card/{{ item.card_id}}" *ngIf="!isVisibleSide"> {{ item.back }}</a>
+          </div>
 
-        <div class="item-actions">
-          <div class="account-dropdown">
-            <button class="account-dropbutton">⋮</button>
-            <div class="account-dropdown-content">
-              <a href="/account#" (click)="passParams('edit', 'card', item.card_id)">edit</a>
-              <a href="/account#" (click)="passParams('delete', 'card', item.card_id)">delete</a>
+          <div class="item-actions">
+            <div class="account-dropdown">
+              <button class="account-dropbutton">⋮</button>
+              <div class="account-dropdown-content">
+                <a href="/account#" (click)="passParams('edit', 'card', item.card_id)">edit</a>
+                <a href="/account#" (click)="passParams('delete', 'card', item.card_id)">delete</a>
+              </div>
             </div>
           </div>
-        </div>
 
+        </div>
       </div>
-    </div>
 
-  </section>
-  <section class="account-all-collections">
-    <div class="account-all-title" (click)="toggleVisibility('collections')"><span
-        style="font-size: 2vh; cursor: pointer;">⬍
-        COLLECTIONS</span></div>
+    </section>
+    <section class="account-all-collections">
+      <div class="account-all-title" (click)="toggleVisibility('collections')"><span
+          style="font-size: 2vh; cursor: pointer;">⬍
+          COLLECTIONS</span></div>
 
-    <div class="all" *ngIf="isVisibleCollections">
-      <span>{{ noItemsMsgCollections }}</span>
-      <div class="item-wrapper" *ngFor="let item of uniqueObjects">
+      <div class="all" *ngIf="isVisibleCollections">
+        <span>{{ noItemsMsgCollections }}</span>
+        <div class="item-wrapper" *ngFor="let item of uniqueObjects">
 
-        <div class="item-name">
-          <a routerLink="/collections/{{ item.id }}"> {{ item.name }}</a>
-        </div>
+          <div class="item-name">
+            <a routerLink="/collections/{{ item.id }}"> {{ item.name }}</a>
+          </div>
 
-        <div class="item-actions">
-          <div class="account-dropdown">
-            <button class="account-dropbutton">⋮</button>
-            <div class="account-dropdown-content">
-              <a href="/account#" (click)="passParams('edit', 'collection', item.id)">edit</a>
-              <a href="/account#" (click)="passParams('delete', 'collection', item.id)">delete</a>
+          <div class="item-actions">
+            <div class="account-dropdown">
+              <button class="account-dropbutton">⋮</button>
+              <div class="account-dropdown-content">
+                <a href="/account#" (click)="passParams('edit', 'collection', item.id)">edit</a>
+                <a href="/account#" (click)="passParams('delete', 'collection', item.id)">delete</a>
+              </div>
             </div>
           </div>
-        </div>
 
+        </div>
       </div>
-    </div>
 
-  </section>
-  <section class="account-all-migrations">
-    <div class="account-all-title" (click)="toggleVisibility('migrations')"><span
-        style="font-size: 2vh; cursor: pointer;">⬍ MIGRATIONS</span></div>
+    </section>
+    <section class="account-all-migrations">
+      <div class="account-all-title" (click)="toggleVisibility('migrations')"><span
+          style="font-size: 2vh; cursor: pointer;">⬍ MIGRATIONS</span></div>
 
-    <div class="all" *ngIf="isVisibleMigrations">
-      <span *ngIf="!migrationObjects">You don't have any migrations yet.</span>
-      <div class="item-wrapper" *ngFor="let item of migrationObjects">
+      <div class="all" *ngIf="isVisibleMigrations">
+        <span *ngIf="!migrationObjects">You don't have any migrations yet.</span>
+        <div class="item-wrapper" *ngFor="let item of migrationObjects">
 
-        <div class="item-name">
-          <span>Migration #{{ item }}</span>
-        </div>
+          <div class="item-name">
+            <span>Migration #{{ item }}</span>
+          </div>
 
-        <div class="item-actions">
-          <div class="account-dropdown">
-            <button class="account-dropbutton">⋮</button>
-            <div class="account-dropdown-content">
-              <a href="/account#" (click)="passParams('delete', 'migration', migrationItem)">delete</a>
+          <div class="item-actions">
+            <div class="account-dropdown">
+              <button class="account-dropbutton">⋮</button>
+              <div class="account-dropdown-content">
+                <a href="/account#" (click)="passParams('delete', 'migration', migrationItem)">delete</a>
+              </div>
             </div>
           </div>
+
         </div>
-
       </div>
-    </div>
 
-  </section>
-</main>
+    </section>
+  </main>
 
-<div style="float: right; margin-top: 3vh;">
-  <a href="/account#" (click)="passParams('delete', 'user', 1)" class="delete-button">DELETE ACCOUNT</a>
-</div>
-<div style="height: 65px; width: 100%;">
-  &nbsp;
-</div>
-
-<!-- Delete modal -->
-
-<div class="confirm-modal-background" *ngIf="modalDelete">
-
-  <div class="confirm-modal">
-    <div class="confirm-top-bar">
-      <br>
-      <span class="confirm-top-bar-text">
-        Delete confirmation
-      </span>
-      <div class="confirm-close-button" (click)="modalVisibility('delete')">x</div>
-    </div>
-
-    <h1 style="color: black;">This action cannot be reversed. Can you confirm you want to proceed?</h1>
-
-
-    <div class="confirm-button" (click)="removeItem(paramType, paramId)">
-      I confirm
-    </div>
+  <div style="float: right; margin-top: 3vh;">
+    <a href="/account#" (click)="passParams('delete', 'user', 1)" class="delete-button">DELETE ACCOUNT</a>
+  </div>
+  <div style="height: 65px; width: 100%;">
+    &nbsp;
   </div>
 
-</div>
+  <!-- Delete modal -->
 
-<!-- Edit collection -->
+  <div class="confirm-modal-background" *ngIf="modalDelete">
 
-<div class="confirm-modal-background" *ngIf="modalEditCollection">
+    <div class="confirm-modal">
+      <div class="confirm-top-bar">
+        <br>
+        <span class="confirm-top-bar-text">
+          Delete confirmation
+        </span>
+        <div class="confirm-close-button" (click)="modalVisibility('delete')">x</div>
+      </div>
 
-  <div class="confirm-modal">
-    <div class="confirm-top-bar">
-      <br>
-      <span class="confirm-top-bar-text">
-        Edit collection
-      </span>
-      <div class="confirm-close-button" (click)="modalVisibility('collection')">x</div>
+      <h1 style="color: black;">This action cannot be reversed. Can you confirm you want to proceed?</h1>
+
+
+      <div class="confirm-button" (click)="removeItem(paramType, paramId)">
+        I confirm
+      </div>
     </div>
 
-    <div class="edit_form">
-      <form #form_edit_collection="ngForm" class="form_edit" (ngSubmit)="editItem(paramType, paramId)">
-        <label for="collection_name"></label>
-        <input type="text" placeholder="Enter the new collection name here..." id="collection_name"
-          name="collection_name" required minlength="3" ngModel>
+  </div>
 
-        <button type="submit" id="submit_edit_collection" [disabled]="!form_edit_collection.valid">Submit</button>
+  <!-- Edit collection -->
+
+  <div class="confirm-modal-background" *ngIf="modalEditCollection">
+
+    <div class="confirm-modal">
+      <div class="confirm-top-bar">
+        <br>
+        <span class="confirm-top-bar-text">
+          Edit collection
+        </span>
+        <div class="confirm-close-button" (click)="modalVisibility('collection')">x</div>
+      </div>
+
+      <div class="edit_form">
+        <form #form_edit_collection="ngForm" class="form_edit" (ngSubmit)="editItem(paramType, paramId)">
+          <label for="collection_name"></label>
+          <input type="text" placeholder="Enter the new collection name here..." id="collection_name"
+            name="collection_name" required minlength="3" ngModel>
+
+          <button type="submit" id="submit_edit_collection" [disabled]="!form_edit_collection.valid">Submit</button>
+        </form>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Edit card -->
+
+  <div class="confirm-modal-background" *ngIf="modalEditCard">
+
+    <div class="confirm-modal">
+      <div class="confirm-top-bar">
+        <br>
+        <span class="confirm-top-bar-text">
+          Edit card
+        </span>
+        <div class="confirm-close-button" (click)="modalVisibility('card')">x</div>
+      </div>
+
+
+      <form #form_edit_card="ngForm" class="form_edit" (ngSubmit)="editItem(paramType, paramId)">
+        <label for="card_front"></label>
+        <input type="text" placeholder="Enter the new front here..." id="edit_front" name="edit_front" required
+          minlength="3" ngModel><br>
+        <label for="card_back"></label>
+        <input type="text" placeholder="Enter the new back here..." id="edit_back" name="edit_back" required
+          minlength="3" ngModel><br>
+
+        <button type="submit" id="submit_edit_card" [disabled]="!form_edit_card.valid">Submit</button>
       </form>
+
+
     </div>
 
   </div>
-
 </div>
+<img class="loader-img" src="../assets/loader.gif" *ngIf="!services.isLoaded">
 
-<!-- Edit card -->
+<div class="loader" *ngIf="!services.isLoaded">
 
-<div class="confirm-modal-background" *ngIf="modalEditCard">
+  <div class="gradient-box-3 loader-br" style="position: absolute; width: 200px; height: 60px; top: 90px;">
+    <div class="gradient-box loader-br" style="position: absolute; width: 185px; height: 40px; left: 440px;"></div>
+    <div class="gradient-box-3 loader-br" style="position: absolute; width: 185px; height: 40px; left: 640px;"></div>
+    <div class="gradient-box-2 loader-br" style="position: absolute; width: 185px; height: 40px; left: 840px;"></div>
 
-  <div class="confirm-modal">
-    <div class="confirm-top-bar">
-      <br>
-      <span class="confirm-top-bar-text">
-        Edit card
-      </span>
-      <div class="confirm-close-button" (click)="modalVisibility('card')">x</div>
-    </div>
+    <div class="gradient-box-4 loader-br"
+      style="position: absolute; width: 255px; height: 50px; top: 80px; left: 770px;"></div>
 
+    <div class="gradient-box loader-br" style="position: absolute; width: 410px; height: 225px; top: 150px;"></div>
+    <div class="gradient-box-3 loader-br"
+      style="position: absolute; width: 90px; height: 180px; top: 190px; left: 10px;"></div>
+    <div class="gradient-box-2 loader-br"
+      style="position: absolute; width: 90px; height: 150px; top: 220px; left: 110px;"></div>
+    <div class="gradient-box-3 loader-br"
+      style="position: absolute; width: 90px; height: 130px; top: 240px; left: 210px;"></div>
+    <div class="gradient-box-4 loader-br"
+      style="position: absolute; width: 90px; height: 180px; top: 190px; left: 310px;"></div>
 
-    <form #form_edit_card="ngForm" class="form_edit" (ngSubmit)="editItem(paramType, paramId)">
-      <label for="card_front"></label>
-      <input type="text" placeholder="Enter the new front here..." id="edit_front" name="edit_front" required
-        minlength="3" ngModel><br>
-      <label for="card_back"></label>
-      <input type="text" placeholder="Enter the new back here..." id="edit_back" name="edit_back" required minlength="3"
-        ngModel><br>
+    <div class="gradient-box loader-br"
+      style="position: absolute; width: 605px; height: 225px; top: 150px; left: 420px;"></div>
+    <div class="gradient-box-4 loader-br"
+      style="position: absolute; width: 505px; height: 35px; top: 180px; left: 440px;"></div>
+    <div class="gradient-box-2 loader-br"
+      style="position: absolute; width: 505px; height: 35px; top: 240px; left: 440px;"></div>
+    <div class="gradient-box-3 loader-br"
+      style="position: absolute; width: 505px; height: 35px; top: 300px; left: 440px;"></div>
 
-      <button type="submit" id="submit_edit_card" [disabled]="!form_edit_card.valid">Submit</button>
-    </form>
-
+    <div class="gradient-box-3 loader-br" style="position: absolute; width: 1025px; height: 330px; top: 400px;"></div>
+    <div class="gradient-box-4 loader-br"
+      style="position: absolute; width: 980px; height: 35px; top: 420px; left: 25px;"></div>
+    <div class="gradient-box-3 loader-br"
+      style="position: absolute; width: 980px; height: 35px; top: 470px; left: 25px;"></div>
+    <div class="gradient-box-2 loader-br"
+      style="position: absolute; width: 980px; height: 35px; top: 520px; left: 25px;"></div>
+    <div class="gradient-box-4 loader-br"
+      style="position: absolute; width: 980px; height: 35px; top: 570px; left: 25px;"></div>
+    <div class="gradient-box-2 loader-br"
+      style="position: absolute; width: 980px; height: 35px; top: 620px; left: 25px;"></div>
+    <div class="gradient-box-3 loader-br"
+      style="position: absolute; width: 980px; height: 35px; top: 670px; left: 25px;"></div>
 
   </div>
-
 </div>

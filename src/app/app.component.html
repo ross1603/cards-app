@@ -15,8 +15,8 @@
                 <a routerLink="/" class="navLink">HOME</a>
                 <a routerLink="/collections" class="navLink">COLLECTIONS</a>
                 <a routerLink="/account" class="navLink">ACCOUNT</a>
-                <a *ngIf="!services.loggedIn()" routerLink="/login" class="navLink"> LOGIN</a> <a *ngIf="!services.loggedIn()"
-                    routerLink="/register"
+                <a *ngIf="!services.loggedIn()" routerLink="/login" class="navLink"> LOGIN</a> <a
+                    *ngIf="!services.loggedIn()" routerLink="/register"
                     style="border: 1px solid black; border-radius: 15px; padding: 1vh; background-color: lightcoral; font-weight: bold;">GET
                     STARTED</a>
                 <a *ngIf="services.loggedIn()" routerLink="/logout" class="navLink">LOGOUT</a>
@@ -24,27 +24,20 @@
         </div>
     </header>
     <nav id="dropdown">
-        <a routerLink="/">HOME</a>
-        <a routerLink="/collections">COLLECTIONS</a>
-        <a routerLink="/account">ACCOUNT</a>
-        <a *ngIf="!services.loggedIn()" routerLink="/login"> LOGIN</a> <a *ngIf="!services.loggedIn()" routerLink="/register"> REGISTER</a>
-        <a *ngIf="services.loggedIn()" routerLink="/logout"> LOGOUT</a>
+        <a routerLink="/" onClick="menuClose()">HOME</a>
+        <a routerLink="/collections" onClick="menuClose()">COLLECTIONS</a>
+        <a routerLink="/account" onClick="menuClose()">ACCOUNT</a>
+        <a *ngIf="!services.loggedIn()" routerLink="/login" onClick="menuClose()"> LOGIN</a> <a
+            *ngIf="!services.loggedIn()" routerLink="/register" onClick="menuClose()"> REGISTER</a>
+        <a *ngIf="services.loggedIn()" routerLink="/logout" onClick="menuClose()"> LOGOUT</a>
     </nav>
-    <section class="main col" *ngIf="isLoaded">
+    <section class="main col">
         <div class="content">
             <router-outlet></router-outlet>
         </div>
     </section>
 
-    <section class="main col" *ngIf="!isLoaded">
-        <div class="content">
-            <div class="loader">
-                <img src="./assets/loader.gif">
-            </div>
-        </div>
-    </section>
-
-    <section class="footer col" *ngIf="isLoaded">
+    <section class="footer col" *ngIf="services.isLoaded">
         <div class="content">
             <div class="footer-container">
                 <div class="footer-1">
@@ -76,7 +69,7 @@
     <div> {{ this.services.msgToModal }}</div>
 </div>
 
-<div class="analytics-sidebar" *ngIf="!services.isSignup && !services.isAccount && services.loggedIn()">
+<div class="analytics-sidebar" *ngIf="!services.isSignup && !services.isAccount && services.loggedIn() && services.isLoaded">
     <div class="analytics-wrapper">
         <img src="./assets/analytics-icon.png"><br>
         <span class="analytics-title">ANALYTICS</span><br><br>
@@ -99,4 +92,26 @@
         </div>
     </div>
     <div class="analytics-bottom"><a routerLink="/account">FULL ANALYTICS ►</a></div>
+</div>
+
+<div class="analytics-sidebar-mobile" *ngIf="!services.isSignup && !services.isAccount && services.loggedIn()">
+    <div class="analytics-wrapper-mobile">
+        <div class="a-s-m-1">
+            <img src="./assets/analytics-icon.png"><br>
+            <span class="analytics-title">ANALYTICS</span><br>
+            <span class="analytics-title" style="font-size: 10px;">TODAY'S RESULTS</span>
+        </div>
+
+        <div class="a-s-m-2" style="background-color: rgb(208, 208, 255); border-radius: 5px; padding: 5px;">
+            <span class="analytics-count-mobile">{{ services.analyticsTotal }}</span><br>
+
+        </div>
+        <div class="a-s-m-3" style="background-color: rgb(208, 255, 229); border-radius: 5px; padding: 5px;">
+            <span class="analytics-count-mobile">{{ services.analyticsYes }}</span><br>
+        </div>
+        <div class="a-s-m-4" style="background-color: rgb(255, 208, 208); border-radius: 5px; padding: 5px;">
+            <span class="analytics-count-mobile">{{ services.analyticsNo }}</span><br>
+        </div>
+    </div>
+    <div class="analytics-bottom-mobile"><a routerLink="/account">FULL ANALYTICS ► &nbsp;&nbsp;</a></div>
 </div>

@@ -57,7 +57,7 @@ export class MigrationComponent {
           }
         },
         (error) => {
-          console.log(error);
+          console.error(error);
           if (error.status == 401) {
             this.services.msgModal("Missing/Invalid credentials.", false);
           }
@@ -92,7 +92,7 @@ export class MigrationComponent {
           this.services.msgModal("Migration submitted successfully. Please check your account shortly.", true);
         },
         (error) => {
-          console.log(error);
+          console.error(error);
           if (error.status == 422) {
             this.services.msgModal(error.error, false);
           }

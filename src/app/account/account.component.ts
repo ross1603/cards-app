@@ -124,6 +124,10 @@ export class AccountComponent {
   token: string | null = localStorage.getItem('token');
 
   ngOnInit() {
+    setTimeout(() => {
+      this.services.isLoaded = true;
+    }, 3000);
+
     const apiUrl: string = 'http://localhost:3000/api/account';
     const postData: object = {
       token: this.token,
@@ -226,7 +230,6 @@ export class AccountComponent {
         (response) => {
           this.analyticsDashboardObjects = response;
           this.selectedCategory = response[0].collection_name;
-          console.log(this.analyticsDashboardObjects);
 
           for (let i = 0; i < this.analyticsDashboardObjects.length; i++) {
             if (this.analyticsDashboardObjects[i].total_votes == 0) {
@@ -284,7 +287,6 @@ export class AccountComponent {
     })
       .subscribe(
         (response) => {
-          console.log(response);
           if (type == "user") {
             localStorage.removeItem('token');
             this.router.navigate(['/']);
@@ -382,7 +384,6 @@ export class AccountComponent {
     })
       .subscribe(
         (response: object) => {
-          console.log(response);
           this.services.msgModal("Submitted successfully.", true);
           this.form_add_card?.reset();
           this.form_add_collection?.reset();

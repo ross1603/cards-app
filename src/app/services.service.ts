@@ -9,9 +9,10 @@ export class ServicesService {
   constructor(public http: HttpClient) { }
 
   // LOGGED IN & GENERAL STATE
-
+  isLoaded: boolean = false;
   isLogged: boolean = false;
   isSignup: boolean = false;
+
   public loggedIn() {
     if (localStorage.getItem('token') && localStorage.getItem('token') != null) {
       this.isLogged = true;
@@ -150,10 +151,9 @@ export class ServicesService {
           this.getAnalyticsSidebar();
         },
         (error) => {
-          console.log(error.error);
+          console.error(error.error);
         }
       );
-    console.log(arg, arg2);
     this.voted = true;
   }
 

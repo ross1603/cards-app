@@ -20,14 +20,13 @@ export class AppComponent {
     this.services.isAccount = false;
     this.services.isLogged = this.services.loggedIn();
   }
-  isLoaded: boolean = false;
 
   ngOnInit() {
     if (this.services.loggedIn()) {
       this.services.getAnalyticsSidebar();
     }
     setTimeout(() => {
-      this.isLoaded = true;
-    }, 0);
+      this.services.isLoaded = true;
+    }, 3000);
   }
 }

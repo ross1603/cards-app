@@ -683,7 +683,7 @@ app.post('/api/register', (req, res) => {
     let validation = 0;
     let responseError;
 
-    let regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{12,30}$/; // 12-30 characters, lowercase, uppercase, symbol, number.
+    let regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,30}$/; // 8-30 characters, lowercase, uppercase, symbol, number.
     let regexUsername = /^[a-zA-Z][a-zA-Z0-9_]{2,20}$/; // 3-20 characters, uppercase, lowercase, underscore, must start with letter.
 
     if (password == username && username) {

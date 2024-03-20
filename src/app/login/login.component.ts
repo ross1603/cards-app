@@ -49,6 +49,7 @@ export class LoginComponent {
           localStorage.setItem('token', String(response));
           setTimeout(() => {
             this.router.navigate(["/account"]);
+            this.services.isLoaded = false;
           }, 3000);
 
         },
@@ -57,7 +58,7 @@ export class LoginComponent {
             this.displayResponse = error.error;
           }
           else {
-            console.log(error);
+            console.error(error);
             this.displayResponse = "Something went wrong. Please contact support."
           }
         }
