@@ -34,6 +34,8 @@ export class AccountComponent {
   @ViewChild('form_add_card', { static: false }) form_add_card?: NgForm;
   @ViewChild('form_add_collection', { static: false }) form_add_collection?: NgForm;
   @ViewChild('form_analytics_dashboard', { static: false }) form_analytics_dashboard?: NgForm;
+  @ViewChild('form_edit_collection', { static: false }) form_edit_collection?: NgForm;
+  @ViewChild('form_edit_card', { static: false }) form_edit_card?: NgForm;
 
   isVisibleCards: boolean = true;
   isVisibleCollections: boolean = false;
@@ -43,7 +45,7 @@ export class AccountComponent {
   isVisibleAddCollection: boolean = false;
   noItemsMsg: string = '';
   noItemsMsgCollections: string = '';
-  selectedCategory: string = 'test';
+  selectedCategory: string = 'No data yet.';
 
   successCount: number = 0;
   missedCount: number = 0;
@@ -53,6 +55,43 @@ export class AccountComponent {
   missedHeight: string = '5%';
   mixedHeight: string = '5%';
   noneHeight: string = '5%';
+  modalEditCard: boolean = false;
+  modalEditCollection: boolean = false;
+  modalDelete: boolean = false;
+
+  paramAction: string = '';
+  paramType: string = '';
+  paramId: number | string = 0;
+
+  public passParams(arg: string, arg2: string, arg3: number | string) {
+    this.paramAction = arg;
+    this.paramType = arg2;
+    this.paramId = arg3;
+
+    if (arg == "delete") {
+      this.modalDelete = true;
+    }
+    else if (arg == "edit") {
+      if (arg2 == "card") {
+        this.modalEditCard = true;
+      }
+      else if (arg2 == "collection") {
+        this.modalEditCollection = true;
+      }
+    }
+  }
+
+  public modalVisibility(arg: string) {
+    if (arg == "card") {
+      this.modalEditCard = !this.modalEditCard;
+    }
+    else if (arg == "collection") {
+      this.modalEditCollection = !this.modalEditCollection
+    }
+    else if (arg == "delete") {
+      this.modalDelete = !this.modalDelete;
+    }
+  }
 
   toggleVisibility(arg: string) {
     if (arg == "cards") {
@@ -236,32 +275,31 @@ export class AccountComponent {
     const id: number = Number(id_arg);
     const type: string = String(type_arg);
 
-    if (confirm("This action cannot be reversed. Are you sure you want to proceed?")) {
-      const apiUrl: string = 'http://localhost:3000/api/delete/' + type + '/' + id;
-      this.http.delete<Object>(apiUrl, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `${this.token}`,
-        }
-      })
-        .subscribe(
-          (response) => {
-            console.log(response);
-            if (type == "user") {
-              localStorage.removeItem('token');
-              this.router.navigate(['/']);
-            }
-            else {
-              this.ngOnInit();
-            }
-          },
-          (error) => {
-            this.services.msgModal("Something went wrong. Please contact support.", false);
-            console.error('POST error:', error);
+    const apiUrl: string = 'http://localhost:3000/api/delete/' + type + '/' + id;
+    this.http.delete<Object>(apiUrl, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${this.token}`,
+      }
+    })
+      .subscribe(
+        (response) => {
+          console.log(response);
+          if (type == "user") {
+            localStorage.removeItem('token');
+            this.router.navigate(['/']);
           }
-        );
-
-    }
+          else {
+            this.ngOnInit();
+            this.services.msgModal(`The ${type} is successfully deleted.`, true);
+          }
+        },
+        (error) => {
+          this.services.msgModal("Something went wrong. Please contact support.", false);
+          console.error('POST error:', error);
+        }
+      );
+    this.modalDelete = false;
   }
 
   // Edit requests.
@@ -269,35 +307,11 @@ export class AccountComponent {
   editItem(type_arg: string | number, arg: string | number): void {
     const number: number = Number(arg);
     const type: string = String(type_arg);
-    let proceed: number = 0;
 
-    let front: string | null = '';
-    let back: string | null = '';
-    let name: string | null = '';
+    let front: string | null = this.form_edit_card?.value.edit_front;
+    let back: string | null = this.form_edit_card?.value.edit_back;
+    let name: string | null = this.form_edit_collection?.value.collection_name;
 
-    if (type == "card") {
-      front = prompt("Please enter new value for Front:", "");
-      if (front == null || front == "") {
-      }
-      else {
-        back = prompt("Please enter new value for Back:", "");
-        if (back == null || back == "") {
-        }
-        else {
-          if (confirm(`Are you sure you want to proceed?`)) {
-            proceed = 1;
-          }
-        }
-      }
-    }
-    else if (type == "collection") {
-      name = prompt("Please enter new collection name:", "");
-      if (name == null || name == "") {
-      }
-      else {
-        proceed = 1;
-      }
-    }
     const postData: object = {
       id: number,
       front: front,
@@ -305,32 +319,35 @@ export class AccountComponent {
       back: back,
       name: name,
     };
-    if (proceed == 1) {
-      const apiUrl: string = 'http://localhost:3000/api/update';
+    const apiUrl: string = 'http://localhost:3000/api/update';
 
-      this.http.patch<Object>(apiUrl, postData, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `${this.token}`
-        }
-      })
-        .subscribe(
-          (response) => {
-            this.ngOnInit();
-          },
-          (error) => {
-            if (error.status == 422) {
-              this.services.msgModal(error.error, false);
-            }
-            else {
-              console.error('POST error:', error);
-              this.services.msgModal("Something went wrong. Please contact support.", false);
-            }
+    this.http.patch<Object>(apiUrl, postData, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${this.token}`
+      }
+    })
+      .subscribe(
+        (response) => {
+          this.ngOnInit();
+          this.services.msgModal(`The ${type} is successfully edited.`, true);
+        },
+        (error) => {
+          if (error.status == 422) {
+            this.services.msgModal(error.error, false);
           }
-        );
+          else {
+            console.error('POST error:', error);
+            this.services.msgModal("Something went wrong. Please contact support.", false);
+          }
+        }
+      );
+
+    if (front) {
+      this.modalEditCard = false;
     }
     else {
-      this.services.msgModal("Fields cannot be empty. Please try again.", false);
+      this.modalEditCollection = false;
     }
   }
 

@@ -81,6 +81,9 @@ export class CollectionsComponent {
         (error) => {
           console.error(error);
           this.router.navigate(['/account']);
+          if (token) {
+            this.services.msgModal("No cards to display, please add cards first.", false);
+          }
         }
       );
   }

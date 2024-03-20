@@ -11,7 +11,7 @@ body {
 }
 
 .error-modal {
-	position: absolute;
+	position: fixed;
 	right: 25%;
 	left: 50%;
 	margin-left: -150px;

@@ -168,8 +168,8 @@
           <div class="account-dropdown">
             <button class="account-dropbutton">⋮</button>
             <div class="account-dropdown-content">
-              <a href="/account#" (click)="editItem('card', item.card_id)">edit</a>
-              <a href="/account#" (click)="removeItem('card', item.card_id)">delete</a>
+              <a href="/account#" (click)="passParams('edit', 'card', item.card_id)">edit</a>
+              <a href="/account#" (click)="passParams('delete', 'card', item.card_id)">delete</a>
             </div>
           </div>
         </div>
@@ -195,8 +195,8 @@
           <div class="account-dropdown">
             <button class="account-dropbutton">⋮</button>
             <div class="account-dropdown-content">
-              <a href="/account#" (click)="editItem('collection', item.id)">edit</a>
-              <a href="/account#" (click)="removeItem('collection', item.id)">delete</a>
+              <a href="/account#" (click)="passParams('edit', 'collection', item.id)">edit</a>
+              <a href="/account#" (click)="passParams('delete', 'collection', item.id)">delete</a>
             </div>
           </div>
         </div>
@@ -221,7 +221,7 @@
           <div class="account-dropdown">
             <button class="account-dropbutton">⋮</button>
             <div class="account-dropdown-content">
-              <a href="/account#" (click)="removeItem('migration', migrationItem)">delete</a>
+              <a href="/account#" (click)="passParams('delete', 'migration', migrationItem)">delete</a>
             </div>
           </div>
         </div>
@@ -233,8 +233,88 @@
 </main>
 
 <div style="float: right; margin-top: 3vh;">
-  <a href="/account#" (click)="removeItem('user', 1)" class="delete-button">DELETE ACCOUNT</a>
+  <a href="/account#" (click)="passParams('delete', 'user', 1)" class="delete-button">DELETE ACCOUNT</a>
 </div>
 <div style="height: 65px; width: 100%;">
   &nbsp;
+</div>
+
+<!-- Delete modal -->
+
+<div class="confirm-modal-background" *ngIf="modalDelete">
+
+  <div class="confirm-modal">
+    <div class="confirm-top-bar">
+      <br>
+      <span class="confirm-top-bar-text">
+        Delete confirmation
+      </span>
+      <div class="confirm-close-button" (click)="modalVisibility('delete')">x</div>
+    </div>
+
+    <h1 style="color: black;">This action cannot be reversed. Can you confirm you want to proceed?</h1>
+
+
+    <div class="confirm-button" (click)="removeItem(paramType, paramId)">
+      I confirm
+    </div>
+  </div>
+
+</div>
+
+<!-- Edit collection -->
+
+<div class="confirm-modal-background" *ngIf="modalEditCollection">
+
+  <div class="confirm-modal">
+    <div class="confirm-top-bar">
+      <br>
+      <span class="confirm-top-bar-text">
+        Edit collection
+      </span>
+      <div class="confirm-close-button" (click)="modalVisibility('collection')">x</div>
+    </div>
+
+    <div class="edit_form">
+      <form #form_edit_collection="ngForm" class="form_edit" (ngSubmit)="editItem(paramType, paramId)">
+        <label for="collection_name"></label>
+        <input type="text" placeholder="Enter the new collection name here..." id="collection_name"
+          name="collection_name" required minlength="3" ngModel>
+
+        <button type="submit" id="submit_edit_collection" [disabled]="!form_edit_collection.valid">Submit</button>
+      </form>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Edit card -->
+
+<div class="confirm-modal-background" *ngIf="modalEditCard">
+
+  <div class="confirm-modal">
+    <div class="confirm-top-bar">
+      <br>
+      <span class="confirm-top-bar-text">
+        Edit card
+      </span>
+      <div class="confirm-close-button" (click)="modalVisibility('card')">x</div>
+    </div>
+
+
+    <form #form_edit_card="ngForm" class="form_edit" (ngSubmit)="editItem(paramType, paramId)">
+      <label for="card_front"></label>
+      <input type="text" placeholder="Enter the new front here..." id="edit_front" name="edit_front" required
+        minlength="3" ngModel><br>
+      <label for="card_back"></label>
+      <input type="text" placeholder="Enter the new back here..." id="edit_back" name="edit_back" required minlength="3"
+        ngModel><br>
+
+      <button type="submit" id="submit_edit_card" [disabled]="!form_edit_card.valid">Submit</button>
+    </form>
+
+
+  </div>
+
 </div>
