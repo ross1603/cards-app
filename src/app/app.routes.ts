@@ -18,6 +18,7 @@ export const routes: Routes = [
   { path: 'logout', component: LogoutComponent, title: "Logout" },
   { path: 'register', component: RegisterComponent, title: "Register" },
   { path: 'collections', component: CollectionsComponent, title: "Collections" },
+  { path: 'collections/page/:id3', component: CollectionsComponent, title: "Collections Pages" },
   { path: 'collections/:id', component: CollectionsComponent, data: { collectionId: ':id' }, title: "Collections" },
   { path: 'collections/:id/:id2', component: CollectionsComponent, data: { focus: 'focus' }, title: "Collections" },
   { path: 'card/:id', component: CardComponent, title: "Card" },

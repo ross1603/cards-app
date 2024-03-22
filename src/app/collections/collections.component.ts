@@ -16,6 +16,7 @@ export class CollectionsComponent {
   constructor(public http: HttpClient, private activatedRoute: ActivatedRoute, private router: Router, public services: ServicesService) {
     this.fetchedData = null;
     this.recommendedData = null;
+    this.placeholders = null;
   }
 
   fetchedData: interfaceCollections[] | null;
@@ -24,6 +25,8 @@ export class CollectionsComponent {
   link: string = "collections";
   collectionTitle: string = '';
   showAll: boolean = true;
+  pagesTotal: number = 0;
+  placeholders: Array<number> | null;
 
   currentCard: string = '';
   currentCardBack: string = '';
@@ -32,10 +35,14 @@ export class CollectionsComponent {
   buttonColor: string = "#1419a6";
   cardActions: string = 'SHOW ANSWER';
   voteDiv: boolean = false;
+  isPage: string | null | number = Number(this.activatedRoute.snapshot.paramMap.get('id3'));
+
 
   ngOnInit() {
     let col_id: string | null = this.activatedRoute.snapshot.paramMap.get('id');
     let isFocus: string | null | number = this.activatedRoute.snapshot.paramMap.get('id2');
+    let isPage = Number(this.activatedRoute.snapshot.paramMap.get('id3'));
+
     if (!isFocus) {
       isFocus = 0;
     }
@@ -50,6 +57,7 @@ export class CollectionsComponent {
     const postData: object = {
       col_id: col_id,
       focus: isFocus,
+      page: isPage,
     };
     let headers: object;
     const token: string | null = localStorage.getItem('token');
@@ -71,12 +79,20 @@ export class CollectionsComponent {
     this.http.post<interfaceCollections[]>(apiUrl, postData, headers)
       .subscribe(
         (response) => {
+          if (isPage != null && response.length == 0) {
+            this.router.navigate(['/collections']);
+          }
           this.getRecommended();
           this.fetchedData = response;
           this.currentCard = response[0].front;
           this.currentCardBack = response[0].back;
           this.currentCardId = response[0].id;
           this.nextCard = 1;
+          this.pagesTotal = Math.ceil(response[0].total / 8);
+          if (col_id && Number(col_id) > 0) { }
+          else {
+            this.placeholders = new Array(this.pagesTotal);
+          }
           if (col_id != "0") {
             this.collectionTitle = `► ${response[0].collection_name}`;
           }

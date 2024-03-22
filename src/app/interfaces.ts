@@ -38,6 +38,7 @@ export interface interfaceAccount {
 export interface interfaceCollections {
   collection_id: number;
   name: string;
+  total: number;
 }
 
 export interface interfaceMigrations {

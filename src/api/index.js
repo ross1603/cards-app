@@ -284,13 +284,23 @@ app.post('/api/collections', (req, res) => {
     let col_id = Number(req.body.col_id);
     let token = req.headers.authorization;
     let isFocus = req.body.focus;
+    let isPage = req.body.page;
     let user_id = verify(token);
 
     let q;
 
     if (!isNaN(col_id) && col_id >= 0) {
         if (col_id == 0) {
-            q = 'SELECT DISTINCT(collections.name), collections.id FROM collections INNER JOIN cards on cards.collection_id=collections.id WHERE cards.is_public = 1';
+            let offset = 0;
+            if (isPage != null && (isPage == 1 || isPage == 0)) {
+                offset = 0;
+            }
+            else {
+                offset = (isPage - 1) * 8;
+            }
+            q = `SELECT DISTINCT(collections.name), collections.id, 
+            (SELECT COUNT(DISTINCT(collections.id)) FROM collections INNER JOIN cards on cards.collection_id=collections.id WHERE cards.is_public = 1) as total
+            FROM collections INNER JOIN cards on cards.collection_id=collections.id WHERE cards.is_public = 1 ORDER by collections.id DESC LIMIT 8 OFFSET ${offset}`;
         }
         else {
             if (isFocus == 0) {
