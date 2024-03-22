@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
-import { HttpClient } from '@angular/common/http';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { interfaceCollections, interfaceRecommended } from '../interfaces';
@@ -36,9 +35,12 @@ export class CollectionsComponent {
 
   ngOnInit() {
     let col_id: string | null = this.activatedRoute.snapshot.paramMap.get('id');
-
+    let isFocus: string | null | number = this.activatedRoute.snapshot.paramMap.get('id2');
+    if (!isFocus) {
+      isFocus = 0;
+    }
     let apiUrl: string = 'http://localhost:3000/api/collections';
-    if (col_id) {
+    if (col_id && Number(col_id) > 0) {
       this.showAll = false;
       this.link = "card";
     }
@@ -47,6 +49,7 @@ export class CollectionsComponent {
     }
     const postData: object = {
       col_id: col_id,
+      focus: isFocus,
     };
     let headers: object;
     const token: string | null = localStorage.getItem('token');

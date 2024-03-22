@@ -1,10 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
-import { HttpClient } from '@angular/common/http';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { interfaceAccount, interfaceUnique, interfaceMigrations, interfaceAnalyticsDashboard } from '../interfaces';
+import { interfaceAccount, interfaceCollections, interfaceMigrations, interfaceAnalyticsDashboard } from '../interfaces';
 import { ServicesService } from '../services.service';
 
 @Component({
@@ -20,11 +19,10 @@ export class AccountComponent {
     this.services.isAccount = true;
     this.services.isLogged = true;
     this.services.isSignup = false;
-    this.fetchedData = null;
-    this.uniqueObjects = null;
-    this.migrationObjects = null;
+    this.cardsData = null;
+    this.collectionsData = null;
+    this.migrationsData = null;
     this.analyticsDashboardObjects = null;
-    this.migrationItem = 0;
   }
 
   ngOnDestroy() {
@@ -43,9 +41,9 @@ export class AccountComponent {
   isVisibleSide: boolean = true;
   isVisibleAddCard: boolean = false;
   isVisibleAddCollection: boolean = false;
-  noItemsMsg: string = '';
-  noItemsMsgCollections: string = '';
   selectedCategory: string = 'No data yet.';
+  selectedCategoryId: number = 0;
+  initial_collection_id: number = 0;
 
   successCount: number = 0;
   missedCount: number = 0;
@@ -58,6 +56,10 @@ export class AccountComponent {
   modalEditCard: boolean = false;
   modalEditCollection: boolean = false;
   modalDelete: boolean = false;
+
+  noItemsMsg: string = '';
+  noItemsMsgCollections: string = '';
+  noItemsMsgMigrations: string = '';
 
   paramAction: string = '';
   paramType: string = '';
@@ -116,91 +118,116 @@ export class AccountComponent {
     }
   }
 
-  fetchedData: interfaceAccount[] | null;
-  uniqueObjects: interfaceUnique[] | null
-  migrationObjects: object[] | null;
+  cardsData: interfaceAccount[] | null;
+  collectionsData: interfaceCollections[] | null
+  migrationsData: interfaceMigrations[] | null;
   analyticsDashboardObjects: interfaceAnalyticsDashboard[] | null
-  migrationItem: string | number;
   token: string | null = localStorage.getItem('token');
 
   ngOnInit() {
+    this.noItemsMsg = '';
+    this.noItemsMsgCollections = '';
+    this.noItemsMsgMigrations = '';
+
     setTimeout(() => {
       this.services.isLoaded = true;
     }, 3000);
 
-    const apiUrl: string = 'http://localhost:3000/api/account';
+    this.getCollections();
+  }
+
+  // GET ITEMS
+
+  public getCards() {
     const postData: object = {
-      token: this.token,
+      type: "cards",
     };
+
+    const apiUrl: string = 'http://localhost:3000/api/account';
 
     this.http.post<interfaceAccount[]>(apiUrl, postData, {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `${this.token}`,
+        'Authorization': `${this.token}`
       }
     })
       .subscribe(
         (response) => {
-          this.fetchedData = response;
-
-          let uniqueObjects: Object[] = [];
-          let seenNames = new Set<string>();
-
-          for (const obj of this.fetchedData) {
-            if (!seenNames.has(obj.name || "")) {
-              uniqueObjects.push(obj);
-              seenNames.add(obj.name || "");
-            }
-          }
-
-          type UniqueObject = {
-            id: number;
-            name: string;
-          };
-
-          this.uniqueObjects = uniqueObjects as UniqueObject[];
-          for (let j = 0; j < this.fetchedData.length; j++) {
-            if (this.fetchedData[j].front == null) {
-              this.fetchedData.splice(j, this.fetchedData.length);
-            }
-          }
-
-          if (this.fetchedData.length == 0 || this.uniqueObjects.length == 0 || !this.fetchedData || !this.uniqueObjects) {
-          }
-          else {
-            this.analyticsDashboard(this.uniqueObjects[this.uniqueObjects.length - 1].id);
-          }
-
-          this.uniqueObjects = this.uniqueObjects.slice().reverse();
-
-          let arrayMigrations: Object[] = [];
-          for (let i = 0; i < response.length; i++) {
-            if (response[i].migration_id != 1) {
-              arrayMigrations.push(response[i].migration_id);
-            }
-          }
-
-
-          this.migrationObjects = Array.from(new Set(arrayMigrations));
-          if (this.migrationObjects.length == 0) {
-            this.migrationObjects = null;
-          }
-
-          this.migrationItem = String(this.migrationObjects);
-
-          if (this.fetchedData.length == 0 || !this.fetchedData) {
-            this.toggleVisibility("cards");
+          this.cardsData = response;
+          if (response.length == 0) {
             this.noItemsMsg = `You don't have any cards yet.`;
           }
-          if (this.uniqueObjects.length == 0 || !this.uniqueObjects) {
-            this.noItemsMsgCollections = `You don't have any collections yet.`;
+          else {
+            this.getMigrations();
           }
         },
         (error) => {
-          console.error('POST error:', error);
-          this.router.navigate(['/logout']);
+          console.error(error);
         }
       );
+  }
+
+  public getCollections() {
+    const postData: object = {
+      type: "collections",
+    };
+
+    const apiUrl: string = 'http://localhost:3000/api/account';
+
+    this.http.post<interfaceCollections[]>(apiUrl, postData, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${this.token}`
+      }
+    })
+      .subscribe(
+        (response) => {
+          this.collectionsData = response;
+          if (response.length == 0) {
+            this.noItemsMsgCollections = `You don't have any collections yet.`;
+            this.noItemsMsg = `You don't have any cards yet.`;
+            this.noItemsMsgMigrations = `You don't have any migrations yet.`;
+          }
+          else {
+            this.getCards();
+            this.initial_collection_id = response[0].collection_id;
+            this.selectedCategoryId = response[0].collection_id;
+          }
+        },
+        (error) => {
+          console.error(error);
+          if(error.status == 401) {
+            this.router.navigate(['/logout']);
+          }
+        }
+      );
+  }
+  public getMigrations() {
+    const postData: object = {
+      type: "migrations",
+    };
+
+    const apiUrl: string = 'http://localhost:3000/api/account';
+
+    this.http.post<interfaceMigrations[]>(apiUrl, postData, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${this.token}`
+      }
+    })
+      .subscribe(
+        (response) => {
+          this.migrationsData = response;
+          if (response.length == 0) {
+            this.noItemsMsgMigrations = `You don't have any migrations yet.`;
+          }
+          this.analyticsDashboard(this.initial_collection_id);
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+
   }
 
   // ANALYTICS DASHBOARD
@@ -214,6 +241,7 @@ export class AccountComponent {
     let collection_id: number = arg
     if (arg == 0) {
       collection_id = this.form_analytics_dashboard?.value.collection_id;
+      this.selectedCategoryId = collection_id;
     }
     const postData: object = {
       collection_id: collection_id,

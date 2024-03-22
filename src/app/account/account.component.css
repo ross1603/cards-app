@@ -439,6 +439,15 @@ button {
     padding: 5px;
 }
 
+.focusMode { 
+    font-size: 10px; 
+    font-weight: bold;
+    color: white; 
+    background-color: rgb(26, 186, 151); 
+    border: 1px solid grey;
+    padding: 5px;
+}
+
 .menu-right a,
 .menu-left a {
     grid-area: right-menu;

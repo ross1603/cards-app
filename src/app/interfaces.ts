@@ -30,23 +30,18 @@ export interface interfaceCard {
 }
 
 export interface interfaceAccount {
-  id: number;
-  name: string,
-  card_id: number,
+  card_id: number;
   front: string;
   back: string;
-  is_public: number;
-  collection_id: number;
-  user_id: number;
-  migration_id: number;
 }
 
-export interface interfaceUnique {
-  id: number;
+export interface interfaceCollections {
+  collection_id: number;
   name: string;
 }
 
 export interface interfaceMigrations {
+  migration_id: number;
   id: number;
   front: string;
   back: string;

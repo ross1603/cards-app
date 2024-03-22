@@ -267,7 +267,6 @@ app.post('/api/vote', (req, res) => {
                     con.end();
                 }
                 else {
-                    console.log(result);
                     res.status(201).json(`success`);
                 }
             });
@@ -284,6 +283,9 @@ app.post('/api/vote', (req, res) => {
 app.post('/api/collections', (req, res) => {
     let col_id = Number(req.body.col_id);
     let token = req.headers.authorization;
+    let isFocus = req.body.focus;
+    let user_id = verify(token);
+
     let q;
 
     if (!isNaN(col_id) && col_id >= 0) {
@@ -291,7 +293,20 @@ app.post('/api/collections', (req, res) => {
             q = 'SELECT DISTINCT(collections.name), collections.id FROM collections INNER JOIN cards on cards.collection_id=collections.id WHERE cards.is_public = 1';
         }
         else {
-            q = 'SELECT cards.front, cards.back, cards.id, cards.is_public, cards.user_id, collections.name as collection_name FROM cards INNER JOIN collections on collections.id=cards.collection_id WHERE collections.id = ' + col_id + ' ORDER By cards.is_public DESC';
+            if (isFocus == 0) {
+                q = 'SELECT cards.front, cards.back, cards.id, cards.is_public, cards.user_id, collections.name as collection_name FROM cards INNER JOIN collections on collections.id=cards.collection_id WHERE collections.id = ' + col_id + ' ORDER By cards.is_public DESC';
+            }
+            else {
+                q = `select cards.id, cards.front, cards.back, cards.is_public, cards.user_id, collections.name as collection_name,
+            (SELECT COUNT(*) from analytics where analytics.card_id=cards.id and user_id = ${user_id}) as total_votes,
+            (SELECT COUNT(*) from analytics where analytics.card_id=cards.id and user_id = ${user_id} AND vote = 1) as total_positive_votes
+            FROM cards inner join collections on collections.id=cards.collection_id 
+            where collections.id = ${col_id} and 
+            (((SELECT COUNT(*) from analytics where analytics.card_id=cards.id and user_id = ${user_id}) - 
+            (SELECT COUNT(*) from analytics where analytics.card_id=cards.id and user_id = ${user_id} AND vote = 1)) != 0
+            OR
+            (SELECT COUNT(*) from analytics where analytics.card_id=cards.id and user_id = ${user_id}) = 0)`;
+            }
         }
     }
     else {
@@ -315,7 +330,7 @@ app.post('/api/collections', (req, res) => {
                 }
                 else {
                     if (result != 0) {
-                        if (result[0].user_id == verify(token)) {
+                        if (result[0].user_id == user_id) {
                             res.status(200).json(result);
                             con.end();
                         }
@@ -400,6 +415,8 @@ app.post('/api/card', (req, res) => {
 
 app.post('/api/account', (req, res) => {
     const token = req.headers.authorization;
+    let type = req.body.type;
+
     if (!token || token.length < 150) {
         res.status(401).json(`api/account: No access.`);
         return;
@@ -411,10 +428,26 @@ app.post('/api/account', (req, res) => {
         }
 
         else {
+            let q;
+
+            if (type == "cards") {
+                q = `SELECT id as card_id, front, back FROM cards WHERE user_id = ${user_id} ORDER By id DESC`;
+            }
+            else if (type == "collections") {
+                q = `SELECT id as collection_id, name FROM collections WHERE user_id = ${user_id} ORDER By id DESC`;
+            }
+            else if (type == "migrations") {
+                q = `SELECT id as migration_id FROM migrations WHERE user_id = ${user_id} ORDER By id DESC`;
+            }
+            else {
+                res.status(422).json(`api/account: Invalid type`);
+                return;
+            }
+
             connectDB();
 
             con.connect(function (err) {
-                con.query(`SELECT migrations.id as migration_id, collections.id, collections.name, cards.id as card_id, cards.front, cards.back, cards.is_public, cards.collection_id, cards.user_id FROM cards RIGHT JOIN collections ON collections.id=cards.collection_id RIGHT JOIN migrations ON migrations.id=collections.migration_id WHERE cards.user_id = ${user_id} OR collections.user_id = ${user_id} ORDER by cards.id DESC`, function (err, result, fields) {
+                con.query(q, function (err, result, fields) {
                     if (err) {
                         console.log(err);
                         res.status(400).json(`api/account: Invalid request.`);

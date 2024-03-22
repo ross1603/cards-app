@@ -36,7 +36,7 @@
   <div class="cards-list">
 
     <div class="cards-list-buttons" *ngIf="fetchedData">
-      <div class="latest-cards">LATEST CARDS</div>
+      <div class="latest-cards">CARDS LIST</div>
       <div class="buttons-list">
         <button *ngFor="let item of fetchedData, index as i" (click)="changeCard(item.front, item.back, i, item.id)">
           <span style="font-size: 20px; color: green; vertical-align: middle; margin-right: 5px;" *ngIf="i == nextCard-1">●</span>

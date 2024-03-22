@@ -1,6 +1,5 @@
 import { Component, Input, ViewChild } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
-import { HttpClient } from '@angular/common/http';
+import { HttpClientModule, HttpClient} from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { interfaceHome, interfaceRecommended, interfaceSearch } from '../interfaces'
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
